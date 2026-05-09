@@ -216,15 +216,15 @@ export default function AdminDashboardPage() {
 
         <div className="ad-footer-note">
           {serverStatus === 'live'
-            ? <>모든 통계는 백엔드 <code>/api/safety/admin/*</code> 응답을 사용 중입니다.</>
-            : <>백엔드 미가동 — 프론트 폴백 mock 으로 표시 중입니다. 운영 시 <code>/api/safety/admin/*</code> 응답으로 대체됩니다.</>}
+            ? <>KPI·학과별 이수율은 백엔드 <code>/api/safety/admin/progress</code> 응답을 사용 중입니다. 사고분포·최근사고는 시연 mock.</>
+            : <>백엔드 미가동 — 시연용 mock 통계로 표시 중입니다. 운영 시 <code>/api/safety/admin/progress</code> 응답으로 대체됩니다.</>}
         </div>
 
         {showPending && (
           <div className="ad-modal" onClick={() => setShowPending(false)}>
             <div className="ad-modal-body" onClick={(e) => e.stopPropagation()}>
               <div className="ad-modal-head">
-                <h3>미이수자 명단 — 마감 임박순 상위 {pending.length}명</h3>
+                <h3>미이수자 명단 ({pending.length}명)</h3>
                 <button onClick={() => setShowPending(false)}>×</button>
               </div>
               <table className="ad-modal-table">

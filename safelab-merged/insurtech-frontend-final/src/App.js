@@ -23,8 +23,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* 진입 분기 */}
-        <Route path="/" element={<EntryPage />} />
-        <Route path="/landing" element={<SafetyLandingPage />} />
+        <Route path="/" element={<SafetyLandingPage />} />
+        <Route path="/entry" element={<EntryPage />} />
+        <Route path="/landing" element={<Navigate to="/" replace />} />
 
         {/* 관리자 */}
         <Route path="/admin/login" element={<AdminLoginPage />} />
