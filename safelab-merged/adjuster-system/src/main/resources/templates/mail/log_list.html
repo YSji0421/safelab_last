@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>메일 발송 이력</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/dashboard}">⚖️ 손해사정 시스템</a></div>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">대시보드</a>
+        <a th:href="@{/cases}">사건 목록</a>
+        <a th:href="@{/reservations}">예약</a>
+        <a th:href="@{/qna}">Q&amp;A</a>
+        <a th:href="@{/mail/log}" class="active">메일 이력</a>
+    </div>
+    <div class="nav-user">
+        <span sec:authentication="name"></span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="btn-logout">로그아웃</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-header">
+        <h2>메일 발송 이력</h2>
+    </div>
+
+    <div class="card">
+        <div th:if="${logs.totalElements == 0}" class="empty-msg">발송 이력이 없습니다.</div>
+        <table th:unless="${logs.totalElements == 0}" class="table">
+            <thead>
+                <tr>
+                    <th style="width:150px;">발송일시</th>
+                    <th style="width:80px;">상태</th>
+                    <th style="width:180px;">수신자</th>
+                    <th>제목</th>
+                    <th style="width:100px;">사건</th>
+                    <th style="width:80px;">보기</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="m : ${logs.content}">
+                    <td th:text="${#temporals.format(m.sentAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td>
+                        <span class="badge" th:text="${m.status.name()}"
+                              th:style="${m.status.name() == 'FAILED'} ? 'background:#ffe3e3; color:#c92a2a;' : 'background:#e7f5ff; color:#1864ab;'"></span>
+                    </td>
+                    <td th:text="${m.toAddress}"></td>
+                    <td th:text="${m.subject}"></td>
+                    <td>
+                        <a th:if="${m.caseId != null}" th:href="@{/cases/{id}(id=${m.caseId})}"
+                           th:text="'#' + ${m.caseId}"></a>
+                        <span th:unless="${m.caseId != null}">-</span>
+                    </td>
+                    <td><a th:href="@{/mail/log/{id}(id=${m.id})}" class="btn btn-secondary"
+                           style="padding:4px 10px;">열기</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${logs.totalPages > 1}" style="margin-top:15px; text-align:center;">
+            <a th:each="i : ${#numbers.sequence(0, logs.totalPages - 1)}"
+               th:href="@{/mail/log(page=${i})}"
+               th:text="${i + 1}"
+               th:classappend="${i == logs.number} ? 'btn btn-primary' : 'btn btn-secondary'"
+               style="margin:0 2px;"></a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>메일 로그 상세</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/dashboard}">⚖️ 손해사정 시스템</a></div>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">대시보드</a>
+        <a th:href="@{/cases}">사건 목록</a>
+        <a th:href="@{/reservations}">예약</a>
+        <a th:href="@{/qna}">Q&amp;A</a>
+        <a th:href="@{/mail/log}" class="active">메일 이력</a>
+    </div>
+    <div class="nav-user">
+        <span sec:authentication="name"></span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="btn-logout">로그아웃</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-header">
+        <h2>메일 로그 상세</h2>
+        <a th:href="@{/mail/log}" class="btn btn-secondary">← 목록</a>
+    </div>
+
+    <div class="card">
+        <p><strong>발송일시:</strong> <span th:text="${#temporals.format(log.sentAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+        <p><strong>상태:</strong> <span th:text="${log.status.name()}"></span></p>
+        <p><strong>수신자:</strong> <span th:text="${log.toAddress}"></span></p>
+        <p><strong>제목:</strong> <span th:text="${log.subject}"></span></p>
+        <p th:if="${log.caseId != null}">
+            <strong>사건:</strong>
+            <a th:href="@{/cases/{id}(id=${log.caseId})}" th:text="'#' + ${log.caseId}"></a>
+        </p>
+        <p th:if="${log.consultationId != null and log.caseId != null}">
+            <strong>상담:</strong>
+            <a th:href="@{/cases/{caseId}/consultations/{cid}(caseId=${log.caseId}, cid=${log.consultationId})}"
+               th:text="'상담 #' + ${log.consultationId}"></a>
+        </p>
+        <p th:if="${log.errorMessage != null}">
+            <strong>오류:</strong> <span th:text="${log.errorMessage}" style="color:#c92a2a;"></span>
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>본문 (HTML)</h3>
+        <iframe th:srcdoc="${log.bodyHtml}"
+                style="width:100%; height:500px; border:1px solid #ddd;"></iframe>
+    </div>
+</div>
+</body>
+</html>

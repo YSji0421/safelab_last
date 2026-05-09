@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>상담 기록 수정</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .consult-layout { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+        #help-panel { position: sticky; top: 20px; background:#f8f9fa; border:1px solid #e0e0e0;
+                     border-radius:6px; padding:15px; max-height: calc(100vh - 40px); overflow-y:auto; }
+        #help-panel h3 { margin: 0 0 10px 0; font-size: 1.1em; color:#333; }
+        #help-panel .help-section { margin-bottom: 14px; }
+        #help-panel .help-section h4 { margin: 0 0 6px 0; font-size: 0.95em; color:#1864ab; }
+        #help-panel ul { margin:0; padding-left: 18px; font-size:0.88em; line-height:1.5; }
+        #help-panel .help-engine-info { color:#888; font-size:0.75em; margin-bottom:8px; }
+        #help-panel .help-checklist input { margin-right: 6px; }
+        #help-panel .help-empty { color:#888; font-style:italic; }
+        @media (max-width: 900px) { .consult-layout { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/dashboard}">⚖️ 손해사정 시스템</a></div>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">대시보드</a>
+        <a th:href="@{/cases}">사건 목록</a>
+        <a th:href="@{/reservations}">예약</a>
+        <a th:href="@{/qna}">Q&amp;A</a>
+    </div>
+    <div class="nav-user">
+        <span sec:authentication="name"></span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="btn-logout">로그아웃</button>
+        </form>
+    </div>
+</nav>
+<div class="container">
+    <h2>상담 기록 수정</h2>
+    <p style="color:#666;" th:if="${caseDetail != null}">
+        사건: <strong th:text="${caseDetail.caseName}"></strong>
+        (<span th:text="${caseDetail.accidentTypeDisplay}"></span>)
+    </p>
+
+    <div class="consult-layout">
+        <form th:action="@{/cases/{id}/consultations/{cid}(id=${caseId}, cid=${cid})}" method="post"
+              th:object="${consultationCreateRequest}">
+            <div class="form-group">
+                <label>상담일시 *</label>
+                <input type="datetime-local" th:field="*{consultDatetime}" required/>
+            </div>
+            <div class="form-group">
+                <label>상담방법 *</label>
+                <select th:field="*{consultMethod}" required>
+                    <option th:each="m : ${consultMethods}" th:value="${m.name()}"
+                            th:text="${m.displayName}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>상담내용 *</label>
+                <textarea id="content-textarea" th:field="*{content}" rows="10"
+                          required minlength="10"></textarea>
+            </div>
+            <div class="form-group">
+                <label>특이사항</label>
+                <textarea th:field="*{specialNote}" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">저장</button>
+            <a th:href="@{/cases/{id}/consultations/{cid}(id=${caseId}, cid=${cid})}" class="btn btn-secondary">취소</a>
+        </form>
+
+        <aside>
+            <div id="help-panel">
+                <h3>📋 실시간 상담 도움</h3>
+                <p class="help-empty">상담 내용을 입력하면 추천 질문·체크리스트가 표시됩니다.</p>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<script th:src="@{/js/help-panel.js}"></script>
+<script th:inline="javascript">
+    HelpPanel.init({
+        textareaId: 'content-textarea',
+        panelId: 'help-panel',
+        accidentType: /*[[${caseDetail != null ? caseDetail.accidentType.name() : 'OTHER'}]]*/ 'OTHER',
+        consultationId: /*[[${cid}]]*/ null,
+        debounceMs: 1500
+    });
+</script>
+</body>
+</html>

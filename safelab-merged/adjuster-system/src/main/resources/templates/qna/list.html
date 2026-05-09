@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Q&A - 손해사정 시스템</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/dashboard}">⚖️ 손해사정 시스템</a></div>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">대시보드</a>
+        <a th:href="@{/cases}">사건 목록</a>
+        <a th:href="@{/reservations}">예약</a>
+        <a th:href="@{/qna}" class="active">Q&amp;A</a>
+        <a th:href="@{/mail/log}">메일 이력</a>
+    </div>
+    <div class="nav-user">
+        <span sec:authentication="name"></span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="btn-logout">로그아웃</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-header">
+        <h2>Q&amp;A / 자주 묻는 질문</h2>
+    </div>
+
+    <form method="get" th:action="@{/qna}" class="card"
+          style="display:flex; gap:10px; flex-wrap:wrap; align-items:end;">
+        <div class="form-group" style="min-width:160px;">
+            <label class="form-label">카테고리</label>
+            <select name="category" class="form-control">
+                <option value="">전체</option>
+                <option th:each="c : ${categories}"
+                        th:value="${c.code}"
+                        th:text="${c.name}"
+                        th:selected="${c.code == category}"></option>
+            </select>
+        </div>
+        <div class="form-group" style="flex:1; min-width:220px;">
+            <label class="form-label">검색어</label>
+            <input type="text" name="keyword" class="form-control"
+                   th:value="${keyword}" placeholder="질문/답변/태그 검색"/>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">검색</button>
+            <a th:href="@{/qna}" class="btn btn-secondary">초기화</a>
+        </div>
+    </form>
+
+    <div class="card">
+        <div th:if="${qnaPage.totalElements == 0}" class="empty-msg">
+            조건에 맞는 Q&amp;A 가 없습니다.
+        </div>
+        <table th:unless="${qnaPage.totalElements == 0}" class="table">
+            <thead>
+                <tr>
+                    <th style="width:120px;">카테고리</th>
+                    <th>제목</th>
+                    <th style="width:150px;">태그</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="q : ${qnaPage.content}"
+                    th:onclick="|location.href='/qna/${q.id}'|" class="clickable-row">
+                    <td>
+                        <span class="badge" th:text="${q.category}"></span>
+                    </td>
+                    <td th:text="${q.title}"></td>
+                    <td style="color:#888; font-size:0.85em;" th:text="${q.tags}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${qnaPage.totalPages > 1}" style="margin-top:15px; text-align:center;">
+            <a th:each="i : ${#numbers.sequence(0, qnaPage.totalPages - 1)}"
+               th:href="@{/qna(page=${i}, category=${category}, keyword=${keyword})}"
+               th:text="${i + 1}"
+               th:classappend="${i == qnaPage.number} ? 'btn btn-primary' : 'btn btn-secondary'"
+               style="margin:0 2px;"></a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

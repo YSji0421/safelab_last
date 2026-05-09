@@ -1,0 +1,48 @@
+# ─────────────────────────────────────────────────────────────
+#  adjuster-system 로컬 개발용 프로파일
+#  → 복사 위치: adjuster-system/src/main/resources/application-local.yml
+#  application.yml 의 'spring.profiles.active: local' 설정으로 자동 로드됨
+# ─────────────────────────────────────────────────────────────
+
+spring:
+  # ── 옵션 A: 로컬 MySQL 사용 (운영과 가까운 환경) ──
+  datasource:
+    url: jdbc:mysql://localhost:3306/adjuster_db?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: root
+    password: 123     # 본인 로컬 MySQL 비밀번호로 교체
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # 시드 데이터 자동 로드 (MySQL에서도 강제 실행)
+  # 부팅마다 INSERT 가 다시 돌아 PK 충돌이 나면 ddl-auto: create-drop 으로 바꾸거나
+  # data.sql 의 INSERT 를 INSERT IGNORE 로 변경 필요.
+  sql:
+    init:
+      mode: always
+      continue-on-error: true   # 중복 INSERT 에러를 무시하고 계속 진행
+
+  # ── 옵션 B: H2 in-memory (제로 설정, 매 부팅마다 초기화) ──
+  # 위 datasource 블록을 주석처리하고 아래를 활성화하면 MySQL 설치 없이 바로 띄울 수 있음.
+  #
+  # datasource:
+  #   url: jdbc:h2:mem:adjuster_db;DB_CLOSE_DELAY=-1;MODE=MySQL
+  #   username: sa
+  #   password:
+  #   driver-class-name: org.h2.Driver
+  # h2:
+  #   console:
+  #     enabled: true
+  #     path: /h2-console
+  # jpa:
+  #   properties:
+  #     hibernate:
+  #       dialect: org.hibernate.dialect.H2Dialect
+
+# ── AI (Claude/OpenAI) 통합 ──
+# 미설정 시 상담 요약 기능이 mock 으로 폴백.
+ai:
+  openai:
+    api-key: ${OPENAI_API_KEY:}    # 환경변수 OPENAI_API_KEY 로 주입 권장

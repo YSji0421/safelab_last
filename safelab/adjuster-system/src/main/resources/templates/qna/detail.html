@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${item.title} + ' - Q&A'">Q&amp;A 상세</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/dashboard}">⚖️ 손해사정 시스템</a></div>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">대시보드</a>
+        <a th:href="@{/cases}">사건 목록</a>
+        <a th:href="@{/reservations}">예약</a>
+        <a th:href="@{/qna}" class="active">Q&amp;A</a>
+        <a th:href="@{/mail/log}">메일 이력</a>
+    </div>
+    <div class="nav-user">
+        <span sec:authentication="name"></span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="btn-logout">로그아웃</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-header">
+        <h2 th:text="${item.title}">제목</h2>
+        <a th:href="@{/qna}" class="btn btn-secondary">← 목록</a>
+    </div>
+
+    <div class="card">
+        <p>
+            <span class="badge" th:text="${item.category}"></span>
+            <span th:if="${item.public}" class="badge" style="background:#e7f8e7; color:#0a7a2f;">공개</span>
+            <span th:unless="${item.public}" class="badge" style="background:#eee; color:#555;">내부</span>
+        </p>
+        <hr/>
+        <p style="white-space:pre-wrap; line-height:1.7;" th:text="${item.content}"></p>
+        <hr/>
+        <div th:if="${tagList != null}">
+            <strong>태그:</strong>
+            <span th:each="t : ${tagList}" class="badge" style="margin-right:4px;" th:text="${t}"></span>
+        </div>
+        <p style="color:#999; font-size:0.85em; margin-top:12px;">
+            등록: <span th:text="${item.createdAt}"></span>
+        </p>
+    </div>
+</div>
+</body>
+</html>

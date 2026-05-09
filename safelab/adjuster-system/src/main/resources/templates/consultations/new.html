@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>상담 기록 입력</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .consult-layout { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+        #help-panel { position: sticky; top: 20px; background:#f8f9fa; border:1px solid #e0e0e0;
+                     border-radius:6px; padding:15px; max-height: calc(100vh - 40px); overflow-y:auto; }
+        #help-panel h3 { margin: 0 0 10px 0; font-size: 1.1em; color:#333; }
+        #help-panel .help-section { margin-bottom: 14px; }
+        #help-panel .help-section h4 { margin: 0 0 6px 0; font-size: 0.95em; color:#1864ab; }
+        #help-panel ul { margin:0; padding-left: 18px; font-size:0.88em; line-height:1.5; }
+        #help-panel .help-engine-info { color:#888; font-size:0.75em; margin-bottom:8px; }
+        #help-panel .help-checklist input { margin-right: 6px; }
+        #help-panel .help-empty { color:#888; font-style:italic; }
+        @media (max-width: 900px) { .consult-layout { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/dashboard}">⚖️ 손해사정 시스템</a></div>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">대시보드</a>
+        <a th:href="@{/cases}">사건 목록</a>
+        <a th:href="@{/reservations}">예약</a>
+        <a th:href="@{/qna}">Q&amp;A</a>
+    </div>
+    <div class="nav-user">
+        <span sec:authentication="name"></span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="btn-logout">로그아웃</button>
+        </form>
+    </div>
+</nav>
+<div class="container">
+    <h2>상담 기록 입력</h2>
+    <p style="color:#666;">
+        사건: <strong th:text="${caseDetail.caseName}"></strong>
+        (<span th:text="${caseDetail.accidentTypeDisplay}"></span>)
+    </p>
+
+    <div class="consult-layout">
+        <!-- 좌: 입력 폼 -->
+        <form th:action="@{/cases/{id}/consultations(id=${caseId})}" method="post">
+            <div class="form-group">
+                <label>상담일시 *</label>
+                <input type="datetime-local" name="consultDatetime" required/>
+            </div>
+            <div class="form-group">
+                <label>상담방법 *</label>
+                <select name="consultMethod" required>
+                    <option value="PHONE">전화</option>
+                    <option value="IN_PERSON">대면</option>
+                    <option value="EMAIL">이메일</option>
+                    <option value="OTHER">기타</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>상담내용 * (최소 10자)</label>
+                <textarea id="content-textarea" name="content" rows="12" required minlength="10"
+                          placeholder="상담 내용을 입력하세요... (입력 중 우측 패널에 추천 질문/체크리스트가 표시됩니다)"></textarea>
+            </div>
+            <div class="form-group">
+                <label>특이사항</label>
+                <textarea name="specialNote" rows="3"></textarea>
+            </div>
+            <button type="submit" name="autoSummary" value="true" class="btn btn-primary">저장 및 AI 요약</button>
+            <button type="submit" class="btn btn-secondary">저장만</button>
+            <a th:href="@{/cases/{id}(id=${caseId})}" class="btn btn-secondary">취소</a>
+        </form>
+
+        <!-- 우: 실시간 도움 패널 -->
+        <aside>
+            <div id="help-panel">
+                <h3>📋 실시간 상담 도움</h3>
+                <p class="help-empty">상담 내용을 입력하면 추천 질문·체크리스트가 표시됩니다.</p>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<script th:src="@{/js/help-panel.js}"></script>
+<script th:inline="javascript">
+    HelpPanel.init({
+        textareaId: 'content-textarea',
+        panelId: 'help-panel',
+        accidentType: /*[[${caseDetail.accidentType.name()}]]*/ 'OTHER',
+        debounceMs: 1500
+    });
+</script>
+</body>
+</html>

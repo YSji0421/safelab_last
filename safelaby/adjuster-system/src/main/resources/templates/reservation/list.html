@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>예약 목록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/dashboard}">⚖️ 손해사정 시스템</a></div>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">대시보드</a>
+        <a th:href="@{/cases}">사건 목록</a>
+        <a th:href="@{/reservations}" class="active">예약</a>
+        <a th:href="@{/qna}">Q&amp;A</a>
+        <a th:href="@{/mail/log}">메일 이력</a>
+    </div>
+    <div class="nav-user">
+        <span sec:authentication="name"></span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="btn-logout">로그아웃</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <div th:if="${successMsg}" class="alert alert-success" th:text="${successMsg}"></div>
+    <div th:if="${errorMsg}" class="alert alert-error" th:text="${errorMsg}"></div>
+
+    <div class="page-header">
+        <h2>상담 예약</h2>
+        <a th:href="@{/reservations/new}" class="btn btn-primary">+ 새 예약</a>
+    </div>
+
+    <form method="get" th:action="@{/reservations}" class="card"
+          style="display:flex; gap:10px; flex-wrap:wrap; align-items:end;">
+        <div class="form-group">
+            <label class="form-label">상태</label>
+            <select name="status" class="form-control">
+                <option value="">전체</option>
+                <option th:each="s : ${statuses}"
+                        th:value="${s.name()}"
+                        th:text="${s.displayName}"
+                        th:selected="${status != null and status.name() == s.name()}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">시작일</label>
+            <input type="date" name="from" th:value="${from}" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label class="form-label">종료일</label>
+            <input type="date" name="to" th:value="${to}" class="form-control"/>
+        </div>
+        <div>
+            <button class="btn btn-primary">조회</button>
+            <a th:href="@{/reservations}" class="btn btn-secondary">초기화</a>
+        </div>
+    </form>
+
+    <div class="card">
+        <div th:if="${reservations.totalElements == 0}" class="empty-msg">
+            예약이 없습니다.
+        </div>
+        <table th:unless="${reservations.totalElements == 0}" class="table">
+            <thead>
+                <tr>
+                    <th>일시</th>
+                    <th>고객명</th>
+                    <th>연락처</th>
+                    <th>사고유형</th>
+                    <th>상태</th>
+                    <th>사건</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r : ${reservations.content}"
+                    th:onclick="|location.href='/reservations/${r.id}'|" class="clickable-row">
+                    <td th:text="${#temporals.format(r.startAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${r.clientName}"></td>
+                    <td th:text="${r.clientPhone} ?: ${r.clientEmail}"></td>
+                    <td th:text="${r.accidentType != null} ? ${r.accidentType.displayName} : '-'"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="'status-' + ${r.status.name().toLowerCase()}"
+                              th:text="${r.status.displayName}"></span>
+                    </td>
+                    <td th:text="${r.caseId != null} ? ('#' + ${r.caseId}) : '-'"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

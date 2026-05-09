@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>예약 상세</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/dashboard}">⚖️ 손해사정 시스템</a></div>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">대시보드</a>
+        <a th:href="@{/cases}">사건 목록</a>
+        <a th:href="@{/reservations}" class="active">예약</a>
+        <a th:href="@{/qna}">Q&amp;A</a>
+        <a th:href="@{/mail/log}">메일 이력</a>
+    </div>
+    <div class="nav-user">
+        <span sec:authentication="name"></span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="btn-logout">로그아웃</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <div th:if="${successMsg}" class="alert alert-success" th:text="${successMsg}"></div>
+    <div th:if="${errorMsg}" class="alert alert-error" th:text="${errorMsg}"></div>
+
+    <div class="page-header">
+        <h2>예약 상세</h2>
+        <a th:href="@{/reservations}" class="btn btn-secondary">← 목록</a>
+    </div>
+
+    <div class="card">
+        <p><strong>일시:</strong>
+           <span th:text="${#temporals.format(r.startAt, 'yyyy-MM-dd HH:mm')}"></span>
+           (<span th:text="${r.durationMin}"></span>분)</p>
+        <p><strong>고객:</strong> <span th:text="${r.clientName}"></span></p>
+        <p><strong>연락처:</strong> <span th:text="${r.clientPhone} ?: '-'"></span></p>
+        <p><strong>이메일:</strong> <span th:text="${r.clientEmail} ?: '-'"></span></p>
+        <p><strong>사고유형:</strong>
+           <span th:text="${r.accidentType != null} ? ${r.accidentType.displayName} : '-'"></span></p>
+        <p><strong>상태:</strong>
+            <span class="badge"
+                  th:classappend="'status-' + ${r.status.name().toLowerCase()}"
+                  th:text="${r.status.displayName}"></span>
+        </p>
+        <p th:if="${r.memo != null}"><strong>메모:</strong></p>
+        <p th:if="${r.memo != null}" th:text="${r.memo}" style="white-space:pre-wrap;"></p>
+
+        <p th:if="${r.caseId != null}" style="margin-top:12px;">
+            <strong>연결된 사건:</strong>
+            <a th:href="@{/cases/{id}(id=${r.caseId})}" th:text="'#' + ${r.caseId}"></a>
+        </p>
+    </div>
+
+    <!-- 상태 변경 -->
+    <div class="card" th:if="${r.status.name() != 'COMPLETED' and r.status.name() != 'CANCELLED' and r.status.name() != 'NO_SHOW'}">
+        <h3>상태 변경</h3>
+        <form th:action="@{/reservations/{id}/status(id=${r.id})}" method="post" style="display:inline">
+            <input type="hidden" name="status" value="CONFIRMED"/>
+            <button type="submit" class="btn btn-primary"
+                    th:disabled="${r.status.name() == 'CONFIRMED'}">확정</button>
+        </form>
+        <form th:action="@{/reservations/{id}/status(id=${r.id})}" method="post" style="display:inline">
+            <input type="hidden" name="status" value="CANCELLED"/>
+            <button type="submit" class="btn btn-secondary">취소</button>
+        </form>
+        <form th:action="@{/reservations/{id}/status(id=${r.id})}" method="post" style="display:inline">
+            <input type="hidden" name="status" value="NO_SHOW"/>
+            <button type="submit" class="btn btn-secondary">노쇼</button>
+        </form>
+    </div>
+
+    <!-- 사건으로 전환 -->
+    <div class="card" th:if="${r.caseId == null and (r.status.name() == 'CONFIRMED' or r.status.name() == 'REQUESTED')}">
+        <h3>사건 생성</h3>
+        <p>이 예약 정보를 사건 등록 화면에 prefill 하여 사건을 생성합니다.</p>
+        <a th:href="@{/cases/new(reservationId=${r.id})}" class="btn btn-primary">사건 생성으로 이동 →</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+# ── Node / React ───────────────────────
+node_modules/
+**/node_modules/
+build/
+**/build/
+.env
+.env.local
+.env.development.local
+.env.production.local
+npm-debug.log*
+yarn-error.log*
+
+# ── Java / Spring Boot / Gradle ────────
+.gradle/
+**/.gradle/
+**/bin/
+**/out/
+*.class
+HELP.md
+
+# ── IDE / 에디터 ────────────────────────
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.project
+.settings/
+.classpath
+
+# ── OS ─────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Claude Code 작업 캐시 ───────────────
+.claude/
+*.tmp
+
+# ── 발표/검증 산출물 ────────────────────
+slides_qa/
+*.log
+
+# ── 압축 백업 (이미 풀린 폴더 있음) ─────
+adjuster-system-final.zip
+insurtech-frontend-final.zip
+
+# ── DB ─────────────────────────────────
+*.db
+*.h2.db
+*.mv.db
+
+# ── 약관 PDF (저작권 자료라 repo 외부) ──
+**/「연구실안전공제」*.pdf
+
+# ── 영상 (GitHub 100MB 한도 — Releases 또는 LFS로 별도 업로드) ──
+*.mp4
+*.mov
+*.avi
