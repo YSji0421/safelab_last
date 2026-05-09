@@ -160,13 +160,14 @@ export const speak = (text, opts = {}) => {
   // 1차: CLOVA (provider=clova 또는 auto). 실패 시 Azure → Web 순차 폴백
   if (isClovaEnabled()) {
     speakClova(text, opts).catch((err) => {
-      console.warn('[TTS] CLOVA 실패:', err?.message || err);
-      if (TTS_PROVIDER !== 'clova' && isAzureConfigured()) {
+      console.warn('[TTS] CLOVA 실패 — Azure 폴백 시도:', err?.message || err);
+      if (isAzureConfigured()) {
         speakAzure(text, opts).catch((err2) => {
           console.warn('[TTS] Azure 폴백도 실패 — Web Speech API:', err2?.message || err2);
           speakWebApi(text, opts);
         });
       } else {
+        console.warn('[TTS] Azure 키 미설정 — Web Speech API 로 폴백');
         speakWebApi(text, opts);
       }
     });
