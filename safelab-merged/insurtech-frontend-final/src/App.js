@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import EntryPage from './pages/EntryPage';
 import SafetyLandingPage from './pages/SafetyLandingPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
@@ -22,9 +21,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* 진입 분기 */}
+        {/* 진입 — 외부 소개 랜딩 */}
         <Route path="/" element={<SafetyLandingPage />} />
-        <Route path="/entry" element={<EntryPage />} />
         <Route path="/landing" element={<Navigate to="/" replace />} />
 
         {/* 관리자 */}
