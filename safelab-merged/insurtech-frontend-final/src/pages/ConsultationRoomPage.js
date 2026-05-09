@@ -280,7 +280,7 @@ export default function ConsultationRoomPage() {
             <div className="ai-avatar-ring ring-2" />
             <div className="ai-avatar-ring ring-3" />
             <div className="ai-avatar-circle">
-              <div className="ai-avatar-face">🤖</div>
+              <img className="ai-avatar-face" src="/jeom.png" alt={AVATAR_NAME} />
               <div className={`ai-avatar-mouth ${isSpeaking ? 'talking' : ''}`} />
             </div>
             <div className="ai-avatar-label">

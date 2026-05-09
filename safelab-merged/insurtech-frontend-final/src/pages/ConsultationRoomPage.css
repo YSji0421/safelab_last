@@ -200,7 +200,7 @@
   transform: scale(1.04);
   box-shadow: 0 18px 56px rgba(166, 200, 255, 0.85), inset 0 -10px 30px rgba(255, 255, 255, 0.5);
 }
-.ai-avatar-face { font-size: 86px; line-height: 1; user-select: none; }
+.ai-avatar-face { width: 150px; height: 150px; object-fit: contain; user-select: none; pointer-events: none; }
 .ai-avatar-mouth {
   width: 30px;
   height: 4px;
