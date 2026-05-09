@@ -7,7 +7,6 @@ import {
   ChevronLeft,
   ChevronRight,
   CheckCircle2,
-  Sparkles,
   GraduationCap,
   ScrollText,
   Activity,
@@ -77,9 +76,6 @@ export default function Hero() {
               </button>
             </div>
           </div>
-          <span className="hidden md:inline-flex items-center gap-1.5 rounded-full bg-white/70 backdrop-blur border border-black/5 px-3 py-1.5 text-[11px] font-semibold text-brand-primary">
-            <Sparkles size={12} /> 2026 인하공전 경진대회 출품
-          </span>
         </div>
 
         {/* ──────── Bento Grid ──────── */}
