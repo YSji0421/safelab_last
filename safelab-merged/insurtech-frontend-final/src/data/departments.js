@@ -100,7 +100,7 @@ export const DEPARTMENTS = {
   },
   comp: {
     id: 'comp',
-    name: '컴퓨터정보과',
+    name: '컴퓨터시스템공학과',
     shortName: '컴공',
     icon: '💻',
     accent: '#E60000',
@@ -125,13 +125,18 @@ export const DEPARTMENTS = {
       },
     ],
     emergencyContacts: [
-      { label: '컴퓨터정보과 안전관리자', phone: '032-870-2701', desc: '서버실·실습실 사고 1차 대응' },
+      { label: '컴퓨터시스템공학과 안전관리자', phone: '032-870-2701', desc: '서버실·실습실 사고 1차 대응' },
       { label: '실습실 책임교수', phone: '032-870-2710', desc: '실습 중 사고 보고' },
       { label: '인근 응급의료센터(인하대병원)', phone: '032-890-2114', desc: '응급의식저하·화상' },
     ],
   },
 };
 
-export const DEPARTMENT_LIST = Object.values(DEPARTMENTS);
+export const DEPARTMENT_LIST = [
+  DEPARTMENTS.comp,
+  DEPARTMENTS.chem,
+  DEPARTMENTS.mech,
+  DEPARTMENTS.elec,
+];
 
 export const getDepartment = (id) => DEPARTMENTS[id] || null;

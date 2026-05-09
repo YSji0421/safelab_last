@@ -86,6 +86,7 @@ public class SecurityConfig {
         
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:3000",
+            "https://safelab-last.vercel.app",
             "https://safelab-eight.vercel.app"
         ));
         
