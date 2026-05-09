@@ -2,7 +2,10 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { COMMON_EMERGENCY } from '../data/emergencyCommon';
 import { getDepartment } from '../data/departments';
+import { SEVERITY_LEVELS, REPORTING_CHAINS } from '../data/incidentTypes';
 import './EmergencyPage.css';
+
+const SEVERITY_ORDER = ['심각', '경계', '주의', '관심'];
 
 export default function EmergencyPage() {
   const navigate = useNavigate();
@@ -68,6 +71,58 @@ export default function EmergencyPage() {
             </div>
           </div>
 
+          {/* 사고 등급별 신고 가이드 (B 패키지) */}
+          <section className="em-section">
+            <div className="em-section__head">
+              <span className="eyebrow">사고 등급별 신고 가이드</span>
+              <h2>등급에 따라 신고처가 다릅니다</h2>
+              <p>출처: 인하공전 「2026 대학안전관리계획」 p.24~25 사고등급 평가 매트릭스</p>
+            </div>
+            <div className="em-severity-grid">
+              {SEVERITY_ORDER.map((sev) => {
+                const meta = SEVERITY_LEVELS[sev];
+                const chain = REPORTING_CHAINS[sev] || [];
+                return (
+                  <details key={sev} className={`em-severity em-severity--${meta.color}`}>
+                    <summary className="em-severity__summary">
+                      <span className={`pill ${meta.pillClass} em-severity__pill`}>
+                        {meta.label}
+                      </span>
+                      <span className="em-severity__desc">{meta.description}</span>
+                      <span className="em-severity__deadline">{meta.deadline}</span>
+                      <span className="em-severity__chev" aria-hidden>▾</span>
+                    </summary>
+                    <ol className="em-severity__chain">
+                      {chain.map((r) => (
+                        <li key={r.step} className="em-severity__step">
+                          <span className="em-severity__num">{String(r.step).padStart(2, '0')}</span>
+                          <div>
+                            <h4>{r.label}</h4>
+                            {r.phone && (
+                              <button
+                                type="button"
+                                className="em-severity__call"
+                                onClick={() =>
+                                  r.kind === 'email'
+                                    ? (window.location.href = `mailto:${r.phone}`)
+                                    : handleCall(r.phone)
+                                }
+                              >
+                                {r.kind === 'email' ? '✉ ' : '📞 '}
+                                {r.phone}
+                              </button>
+                            )}
+                            {r.desc && <p>{r.desc}</p>}
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </details>
+                );
+              })}
+            </div>
+          </section>
+
           {/* 학과 전용 (있을 때만) */}
           {studentDept && (
             <section className="em-section">
@@ -114,6 +169,62 @@ export default function EmergencyPage() {
               </div>
             </section>
           ))}
+
+          {/* 비상조치 가이드 (SE-4) — CPR / AED / 소화기 */}
+          <section className="em-section">
+            <div className="em-section__head">
+              <span className="eyebrow">비상조치 — 골든타임 5분</span>
+              <h2>119가 도착할 때까지 당신이 할 수 있는 것</h2>
+              <p>출처: 인하공전 「2026 안전교육자료」 p.46~48 — CPR + AED + 소화기 사용법</p>
+            </div>
+            <div className="em-action-grid">
+              <article className="em-action em-action--red">
+                <div className="em-action__head">
+                  <span className="em-action__icon">🫀</span>
+                  <h3>심폐소생술 (CPR)</h3>
+                </div>
+                <ol className="em-action__steps">
+                  <li><strong>심정지 확인</strong> — 어깨 두드림 + 반응·호흡 확인</li>
+                  <li><strong>119 신고</strong> — 도움 요청 + 주변 사람 지명</li>
+                  <li><strong>흉부압박 30회</strong> — 가슴 중앙 양손 깍지 + 체중 실어 강하게</li>
+                  <li><strong>인공호흡 2회</strong> — 기도 개방 후 시행</li>
+                  <li><strong>반복</strong> — 119 도착까지 30:2 반복</li>
+                </ol>
+              </article>
+
+              <article className="em-action em-action--blue">
+                <div className="em-action__head">
+                  <span className="em-action__icon">⚡</span>
+                  <h3>자동제세동기 (AED)</h3>
+                </div>
+                <ol className="em-action__steps">
+                  <li><strong>전원 ON</strong> — AED 케이스 열고 전원 버튼</li>
+                  <li><strong>패드 부착</strong> — 우측 쇄골 아래 + 좌측 옆구리 (그림 참조)</li>
+                  <li><strong>제세동 실시</strong> — "물러나세요" 외친 후 버튼 (접촉 금지)</li>
+                  <li><strong>즉시 CPR 재개</strong> — 30:2 반복 / 2분마다 AED 분석</li>
+                </ol>
+                <p className="em-action__note">
+                  💡 인하공전 캠퍼스 AED 위치: 본관·1호관·11호관·생활관 (PDF p.30 참조)
+                </p>
+              </article>
+
+              <article className="em-action em-action--orange">
+                <div className="em-action__head">
+                  <span className="em-action__icon">🧯</span>
+                  <h3>소화기 사용법 (PASS)</h3>
+                </div>
+                <ol className="em-action__steps">
+                  <li><strong>P</strong>ull — 안전핀 뽑기 (손잡이 사이 핀)</li>
+                  <li><strong>A</strong>im — 노즐을 불 밑부분 향하기</li>
+                  <li><strong>S</strong>queeze — 손잡이를 꽉 누르기</li>
+                  <li><strong>S</strong>weep — 좌우로 빗자루질하듯 분사</li>
+                </ol>
+                <p className="em-action__note">
+                  ⚠ 초기 5초 안에만 효과. 그 이상은 즉시 대피 + 119. 리튬·알칼리 금속은 물 사용 금지.
+                </p>
+              </article>
+            </div>
+          </section>
 
           <p className="em-footer-note">
             긴급상황 후에는 안전관리실에 <strong>사고 경위서</strong>를 제출해주세요.

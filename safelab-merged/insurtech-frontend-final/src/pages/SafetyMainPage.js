@@ -170,6 +170,61 @@ export default function SafetyMainPage() {
             </div>
             <span className="sm-extra-arrow">→</span>
           </button>
+          <button
+            className="sm-extra-item"
+            onClick={() => navigate('/buildings')}
+          >
+            <span>🏛️</span>
+            <div>
+              <strong>내 강의실 안전등급</strong>
+              <small>캠퍼스 25개 동 인증 / 내진 평가 검색</small>
+            </div>
+            <span className="sm-extra-arrow">→</span>
+          </button>
+          <button
+            className="sm-extra-item"
+            onClick={() => navigate('/incident/photo')}
+          >
+            <span>📷</span>
+            <div>
+              <strong>사진으로 사고 신고</strong>
+              <small>AI가 사고 등급 자동 분류 + 신고처 안내</small>
+            </div>
+            <span className="sm-extra-arrow">→</span>
+          </button>
+          <button
+            className="sm-extra-item"
+            onClick={() => navigate('/insurance/simulator')}
+          >
+            <span>💰</span>
+            <div>
+              <strong>내가 받을 수 있는 보상은?</strong>
+              <small>4종 보험 + 부상 정도 입력 → 보상액 시뮬레이션</small>
+            </div>
+            <span className="sm-extra-arrow">→</span>
+          </button>
+          <button
+            className="sm-extra-item"
+            onClick={() => navigate('/safety/cases')}
+          >
+            <span>📚</span>
+            <div>
+              <strong>실습실 사고사례 10건 학습</strong>
+              <small>「2026 안전교육자료」 PDF 실제 사례 — 면장갑·MSDS·밸브 잠금</small>
+            </div>
+            <span className="sm-extra-arrow">→</span>
+          </button>
+          <button
+            className="sm-extra-item"
+            onClick={() => navigate('/safety/msds')}
+          >
+            <span>🧪</span>
+            <div>
+              <strong>MSDS 학습 — 화학물질 안전 표준</strong>
+              <small>16개 항목 + GHS 그림문자 9종 + 실제 시약 5종 (Sodium azide 등)</small>
+            </div>
+            <span className="sm-extra-arrow">→</span>
+          </button>
         </div>
       </div>
     </div>

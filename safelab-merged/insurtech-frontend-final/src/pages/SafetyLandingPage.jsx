@@ -7,6 +7,7 @@ import React from 'react';
 import Header from '../components/landing/Header';
 import Hero from '../components/landing/Hero';
 import About from '../components/landing/About';
+import WhySafelab from '../components/landing/WhySafelab';
 import Lineup from '../components/landing/Lineup';
 import ContactForm from '../components/landing/ContactForm';
 import Footer from '../components/landing/Footer';
@@ -26,6 +27,7 @@ export default function SafetyLandingPage() {
             <main>
               <Hero />
               <About />
+              <WhySafelab />
               <Lineup />
               <ContactForm />
             </main>

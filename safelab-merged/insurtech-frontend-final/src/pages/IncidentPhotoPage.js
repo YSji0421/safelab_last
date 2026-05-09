@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { analyzeIncidentPhoto } from '../services/incidentVision';
+import {
+  getSeverityMeta,
+  getReportingChain,
+} from '../data/incidentTypes';
 import './IncidentPhotoPage.css';
 
 export default function IncidentPhotoPage() {
@@ -314,6 +318,9 @@ function AnalyzingProgress() {
 // ─────────────────────────────────────────────────────────────
 function ResultView({ result, onRestart, navigate }) {
   const t = result.type;
+  const pdfSeverity = result.pdfSeverity || t.pdfSeverity || '관심';
+  const sevMeta = getSeverityMeta(pdfSeverity);
+  const reportingChain = getReportingChain(pdfSeverity);
   const sevTone =
     t.severity === 'high'
       ? 'ip-result--high'
@@ -332,6 +339,9 @@ function ResultView({ result, onRestart, navigate }) {
             <span className="eyebrow">사고 유형 매칭</span>
             <h2 className="ip-result__name">{t.name}</h2>
             <div className="ip-result__chips">
+              <span className={`pill ${sevMeta.pillClass}`}>
+                사고등급 · {sevMeta.label}
+              </span>
               <span className={`pill ${t.severity === 'high' ? 'pill-rose' : t.severity === 'medium' ? 'pill-orange' : 'pill-gray'}`}>
                 {t.severityLabel}
               </span>
@@ -366,6 +376,48 @@ function ResultView({ result, onRestart, navigate }) {
           )}
         </div>
       </div>
+
+      <section className={`ip-severity-banner ip-severity-banner--${sevMeta.color}`}>
+        <div className="ip-severity-banner__head">
+          <span className={`pill ${sevMeta.pillClass} ip-severity-banner__pill`}>
+            사고등급 {sevMeta.label}
+          </span>
+          <h3>{sevMeta.description}</h3>
+        </div>
+        <p className="ip-severity-banner__deadline">
+          📋 <strong>{sevMeta.deadline}</strong>
+        </p>
+        <p className="ip-severity-banner__source">
+          출처: 인하공전 「2026 대학안전관리계획」 p.24 사고등급 평가 매트릭스
+        </p>
+      </section>
+
+      <section className="ip-block">
+        <div className="ip-block__head">
+          <span className="eyebrow">단계별 신고</span>
+          <h3>이 사고는 다음 순서로 신고하세요</h3>
+          <p>「2026 대학안전관리계획」 PDF p.24~25 보고 체계 기준</p>
+        </div>
+        <ol className="ip-reporting-chain">
+          {reportingChain.map((r) => (
+            <li key={r.step} className="ip-reporting-chain__item">
+              <span className="ip-reporting-chain__num">{String(r.step).padStart(2, '0')}</span>
+              <div className="ip-reporting-chain__body">
+                <h4>{r.label}</h4>
+                {r.phone && (
+                  <a
+                    href={r.kind === 'email' ? `mailto:${r.phone}` : `tel:${String(r.phone).replace(/-/g, '')}`}
+                    className="ip-reporting-chain__phone"
+                  >
+                    {r.phone}
+                  </a>
+                )}
+                {r.desc && <p>{r.desc}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
 
       <section className="ip-block">
         <div className="ip-block__head">

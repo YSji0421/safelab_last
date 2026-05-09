@@ -573,6 +573,127 @@
   border: 1px solid rgba(245, 158, 11, 0.35);
 }
 
+/* Severity banner — PDF 사고등급 매트릭스 (B 패키지) */
+.ip-severity-banner {
+  border-radius: var(--r-lg, 24px);
+  padding: 18px 22px;
+  background: var(--glass-strong);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ip-severity-banner--red {
+  background: linear-gradient(135deg, rgba(254, 226, 226, 0.7), rgba(255, 255, 255, 0.6));
+  border-color: rgba(220, 38, 38, 0.3);
+}
+.ip-severity-banner--orange {
+  background: linear-gradient(135deg, rgba(254, 215, 170, 0.7), rgba(255, 255, 255, 0.6));
+  border-color: rgba(245, 158, 11, 0.35);
+}
+.ip-severity-banner--yellow {
+  background: linear-gradient(135deg, rgba(254, 240, 138, 0.7), rgba(255, 255, 255, 0.6));
+  border-color: rgba(202, 138, 4, 0.3);
+}
+.ip-severity-banner--blue {
+  background: linear-gradient(135deg, rgba(191, 219, 254, 0.7), rgba(255, 255, 255, 0.6));
+  border-color: rgba(37, 99, 235, 0.3);
+}
+.ip-severity-banner__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.ip-severity-banner__head h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.ip-severity-banner__pill {
+  font-weight: 800;
+}
+.ip-severity-banner__deadline {
+  font-size: 14px;
+  color: var(--ink-2);
+  margin: 4px 0 0;
+}
+.ip-severity-banner__deadline strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.ip-severity-banner__source {
+  font-size: 11px;
+  color: var(--ink-mute);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Reporting chain — 단계별 신고 체인 */
+.ip-reporting-chain {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  counter-reset: rep;
+}
+.ip-reporting-chain__item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 16px;
+  padding: 16px 18px;
+  background: var(--glass-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md, 18px);
+  align-items: start;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+.ip-reporting-chain__item:hover {
+  transform: translateX(2px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--ink-3);
+}
+.ip-reporting-chain__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+.ip-reporting-chain__body h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+.ip-reporting-chain__phone {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 800;
+  color: #dc2626;
+  text-decoration: none;
+  margin: 2px 0 4px;
+  letter-spacing: -0.005em;
+}
+.ip-reporting-chain__phone:hover { text-decoration: underline; }
+.ip-reporting-chain__body p {
+  font-size: 13px;
+  color: var(--ink-mute);
+  margin: 0;
+  line-height: 1.55;
+}
+
 /* Responsive */
 @media (max-width: 720px) {
   .ip-main { padding: 20px 16px; gap: 24px; }
@@ -582,4 +703,6 @@
   .ip-result__top { flex-direction: column; }
   .ip-result__name { font-size: 20px; }
   .ip-cta-row .t-btn { flex: 1 0 100%; }
+  .ip-reporting-chain__item { grid-template-columns: 44px 1fr; gap: 12px; padding: 14px 14px; }
+  .ip-reporting-chain__num { width: 44px; height: 44px; font-size: 15px; border-radius: 11px; }
 }

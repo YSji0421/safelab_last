@@ -10,12 +10,16 @@ import SafetyQuizPage from './pages/SafetyQuizPage';
 import CertificatePage from './pages/CertificatePage';
 import EmergencyPage from './pages/EmergencyPage';
 import IncidentPhotoPage from './pages/IncidentPhotoPage';
+import BuildingSafetyPage from './pages/BuildingSafetyPage';
+import IncidentCasesPage from './pages/IncidentCasesPage';
+import MsdsLearnPage from './pages/MsdsLearnPage';
 import EmergencyFab from './components/EmergencyFab';
 
 // 보험 부분 — "이후로 분리" 요구에 맞춰 별도 라우트로 유지
 import DeviceCheckPage from './pages/DeviceCheckPage';
 import ConsultationRoomPage from './pages/ConsultationRoomPage';
 import SummaryPage from './pages/SummaryPage';
+import InsuranceSimulatorPage from './pages/InsuranceSimulatorPage';
 
 function App() {
   return (
@@ -39,11 +43,15 @@ function App() {
         {/* 긴급 + 사진 사고 신고 */}
         <Route path="/emergency" element={<EmergencyPage />} />
         <Route path="/incident/photo" element={<IncidentPhotoPage />} />
+        <Route path="/buildings" element={<BuildingSafetyPage />} />
+        <Route path="/safety/cases" element={<IncidentCasesPage />} />
+        <Route path="/safety/msds" element={<MsdsLearnPage />} />
 
         {/* 보험 부분 (분리 모듈) */}
         <Route path="/insurance/consult" element={<DeviceCheckPage />} />
         <Route path="/insurance/room/:roomId" element={<ConsultationRoomPage />} />
         <Route path="/insurance/summary/:roomId" element={<SummaryPage />} />
+        <Route path="/insurance/simulator" element={<InsuranceSimulatorPage />} />
 
         {/* 레거시 호환 — 기존 보험 페이지가 사용하는 옛 경로 흡수 */}
         <Route path="/login" element={<Navigate to="/admin/login" replace />} />
