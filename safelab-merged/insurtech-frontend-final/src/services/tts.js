@@ -1,10 +1,24 @@
 // ──────────────────────────────────────────────────────────────
-//  TTS — 1차: Azure Speech Service (REST), 2차 폴백: 브라우저 Web Speech API
-//  운영: Vercel Environment Variables 에
-//    REACT_APP_AZURE_SPEECH_KEY=<key>
+//  TTS 우선순위
+//   1차: Naver CLOVA Voice (백엔드 프록시 /api/tts/clova)
+//   2차: Azure Speech Service (브라우저 직접 호출)
+//   3차: 브라우저 Web Speech API (폴백)
+//
+//  Vercel Env (프론트):
+//    REACT_APP_TTS_PROVIDER=clova   (clova | azure | auto)  (기본 auto: clova→azure→web)
+//    REACT_APP_CLOVA_SPEAKER=nara   (선택)
+//    REACT_APP_AZURE_SPEECH_KEY=...
 //    REACT_APP_AZURE_SPEECH_REGION=koreacentral
-//    REACT_APP_AZURE_SPEECH_VOICE=ko-KR-SunHiNeural   (선택)
+//    REACT_APP_AZURE_SPEECH_VOICE=ko-KR-SunHiNeural
+//
+//  Cloudtype Env (백엔드, CLOVA 프록시용):
+//    NAVER_CLOVA_CLIENT_ID=<NCP Application Client ID>
+//    NAVER_CLOVA_CLIENT_SECRET=<NCP Application Client Secret>
 // ──────────────────────────────────────────────────────────────
+
+const TTS_PROVIDER = (process.env.REACT_APP_TTS_PROVIDER || 'auto').toLowerCase();
+const CLOVA_SPEAKER = process.env.REACT_APP_CLOVA_SPEAKER || 'nara';
+const CLOVA_ENDPOINT = '/api/tts/clova';
 
 const AZURE_KEY = process.env.REACT_APP_AZURE_SPEECH_KEY || '';
 const AZURE_REGION = process.env.REACT_APP_AZURE_SPEECH_REGION || 'koreacentral';
@@ -17,6 +31,46 @@ let currentAudio = null;
 let cachedKoVoice = null;
 
 const isAzureConfigured = () => AZURE_KEY && AZURE_KEY.length >= 20;
+
+// CLOVA는 백엔드 프록시 호출이라 프론트엔드 키가 없어도 동작 (백엔드 미구성 시 503/500 응답).
+// REACT_APP_TTS_PROVIDER 가 'azure' 면 강제 비활성, 'clova' 또는 'auto' 면 활성.
+const isClovaEnabled = () => TTS_PROVIDER === 'clova' || TTS_PROVIDER === 'auto';
+
+const speakClova = async (text, { onStart, onEnd, rate = 1.0, pitch = 1.0 }) => {
+  // CLOVA speed 매핑: -5(느림) ~ +5(빠름). rate 1.0 → 0
+  const clovaSpeed = Math.max(-5, Math.min(5, Math.round((rate - 1) * 5)));
+  const clovaPitch = Math.max(-5, Math.min(5, Math.round((pitch - 1) * 5)));
+  const res = await fetch(CLOVA_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      text,
+      speaker: CLOVA_SPEAKER,
+      speed: clovaSpeed,
+      pitch: clovaPitch,
+      format: 'mp3',
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(`CLOVA TTS ${res.status} ${res.statusText}`);
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const audio = new Audio(url);
+  currentAudio = audio;
+  audio.onplay = () => onStart?.();
+  audio.onended = () => {
+    onEnd?.();
+    URL.revokeObjectURL(url);
+    if (currentAudio === audio) currentAudio = null;
+  };
+  audio.onerror = () => {
+    onEnd?.();
+    URL.revokeObjectURL(url);
+    if (currentAudio === audio) currentAudio = null;
+  };
+  await audio.play();
+};
 
 const escapeXml = (s) => String(s)
   .replace(/&/g, '&amp;')
@@ -102,6 +156,23 @@ const speakWebApi = (text, { onStart, onEnd, rate = 1.0, pitch = 1.0 } = {}) => 
 export const speak = (text, opts = {}) => {
   if (!text) { opts.onEnd?.(); return null; }
   cancelSpeak();
+
+  // 1차: CLOVA (provider=clova 또는 auto). 실패 시 Azure → Web 순차 폴백
+  if (isClovaEnabled()) {
+    speakClova(text, opts).catch((err) => {
+      console.warn('[TTS] CLOVA 실패:', err?.message || err);
+      if (TTS_PROVIDER !== 'clova' && isAzureConfigured()) {
+        speakAzure(text, opts).catch((err2) => {
+          console.warn('[TTS] Azure 폴백도 실패 — Web Speech API:', err2?.message || err2);
+          speakWebApi(text, opts);
+        });
+      } else {
+        speakWebApi(text, opts);
+      }
+    });
+    return null;
+  }
+
   if (isAzureConfigured()) {
     speakAzure(text, opts).catch((err) => {
       console.warn('[TTS] Azure Speech 실패 — Web Speech API 로 폴백:', err?.message || err);
@@ -121,4 +192,4 @@ export const cancelSpeak = () => {
   synth?.cancel();
 };
 
-export const isSpeakingSupported = () => !!synth || isAzureConfigured();
+export const isSpeakingSupported = () => !!synth || isAzureConfigured() || isClovaEnabled();
