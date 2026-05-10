@@ -11,6 +11,18 @@ import {
 import { safetyApi } from '../services/api';
 import './AdminDashboardPage.css';
 
+// 관리자 빠른 접근 메뉴 — 새로 추가된 모든 기능 진입점
+const QUICK_LINKS = [
+  { icon: '🏫', label: '학교 전체 통합 뷰',   desc: '4학과 합산 자동 집계 + CSV/JSON 내보내기',  to: '/admin/dept/all',     tone: 'primary' },
+  { icon: '📚', label: '사고사례 라이브러리', desc: '「2026 안전교육자료」 PDF 사고 10건',         to: '/safety/cases',       tone: 'default' },
+  { icon: '🧪', label: 'MSDS 학습',            desc: '16항목 + GHS 그림문자 9종 + 시약 5종',       to: '/safety/msds',        tone: 'default' },
+  { icon: '🏛️', label: '캠퍼스 건물 안전등급', desc: '인하공전 25개 동 인증/내진평가',             to: '/buildings',          tone: 'default' },
+  { icon: '🛡️', label: '연구실안전공제 가입', desc: '제26조 의무 가입 신청 시연',                  to: '/insurance/enroll',   tone: 'mint' },
+  { icon: '📋', label: '보상 청구 시연',      desc: '사고 → 청구 의사 접수 폼',                    to: '/insurance/claim',    tone: 'mint' },
+  { icon: '📷', label: '사진 사고 신고',      desc: 'AI 사고등급 4단계 자동 분류',                 to: '/incident/photo',     tone: 'warn' },
+  { icon: '🚨', label: '비상 가이드',         desc: '신고 체인 + CPR/AED/소화기 PASS',            to: '/emergency',          tone: 'warn' },
+];
+
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
   const [admin, setAdmin] = useState(null);
@@ -142,32 +154,63 @@ export default function AdminDashboardPage() {
           </div>
         </section>
 
+        {/* 관리자 빠른 접근 — 새로 추가된 모든 기능 진입점 */}
+        <section className="ad-section">
+          <div className="ad-section-head">
+            <h2>관리자 빠른 접근</h2>
+            <small>학교 전체 통합 뷰 · 학생 측 기능 · 콘텐츠 관리 · 보험 가입/청구 시연</small>
+          </div>
+          <div className="ad-quick-grid">
+            {QUICK_LINKS.map((q) => (
+              <button
+                key={q.to}
+                type="button"
+                className={`ad-quick ad-quick--${q.tone || 'default'}`}
+                onClick={() => navigate(q.to)}
+              >
+                <span className="ad-quick__icon">{q.icon}</span>
+                <div className="ad-quick__body">
+                  <strong>{q.label}</strong>
+                  <small>{q.desc}</small>
+                </div>
+                <span className="ad-quick__arrow">→</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
         <section className="ad-section">
           <div className="ad-section-head">
             <h2>학과별 이수 현황</h2>
-            <small>시나리오 + 약관 퀴즈 완전 이수 비율</small>
+            <small>시나리오 + 약관 퀴즈 완전 이수 비율 · 카드 클릭 시 학과 담당자 화면</small>
           </div>
           <div className="ad-dept-list">
             {deptProgress.map((d) => (
               <button
                 key={d.id}
                 type="button"
-                className={`ad-dept risk-${d.risk} ad-dept--clickable`}
+                className={`ad-dept ad-dept--v2 risk-${d.risk}`}
                 onClick={() => navigate(`/admin/dept/${d.id}`)}
                 title={`${d.name} 담당자 대시보드 열기`}
               >
-                <div className="ad-dept-row">
-                  <strong>{d.name} <span className="ad-dept-arrow">→</span></strong>
-                  <span>약 {d.completed} / 약 {d.total}명 ({d.rate}%)</span>
+                <div className="ad-dept__head">
+                  <div className="ad-dept__title">
+                    <strong>{d.name}</strong>
+                    {d.risk === 'high' && <span className="ad-dept__pill ad-dept__pill--high">⚠ 위험도 높음</span>}
+                    {d.risk === 'mid'  && <span className="ad-dept__pill ad-dept__pill--mid">주의</span>}
+                    {d.risk === 'low'  && <span className="ad-dept__pill ad-dept__pill--low">양호</span>}
+                  </div>
+                  <div className="ad-dept__rate">
+                    <span className="ad-dept__rate-num">{d.rate}</span>
+                    <span className="ad-dept__rate-pct">%</span>
+                  </div>
                 </div>
                 <div className="ad-dept-bar">
                   <div className="ad-dept-fill" style={{ width: `${d.rate}%` }} />
                 </div>
-                <div className="ad-dept-meta">
-                  {d.risk === 'high' && <span className="pill pill-red">⚠ 위험도 높음</span>}
-                  {d.risk === 'mid' && <span className="pill" style={{ background: '#FEF3C7', color: '#92400E' }}>주의</span>}
-                  {d.risk === 'low' && <span className="pill pill-green">양호</span>}
-                  <span className="ad-dept-cta">담당자 화면 열기</span>
+                <div className="ad-dept__foot">
+                  <span>약 {d.completed} / 약 {d.total}명 이수</span>
+                  <span className="ad-dept__cta">담당자 화면 열기 →</span>
                 </div>
               </button>
             ))}
