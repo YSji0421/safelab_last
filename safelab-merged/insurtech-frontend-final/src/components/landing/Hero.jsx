@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -16,6 +17,7 @@ import { HERO } from '../../data/landing';
 // Bento grid hero — Linear/Vercel/Apple Vision Pro 발표 페이지 톤.
 // 좌측 헤드라인(큰 영역) + 우측 일러스트(큰 영역) + 하단 4개 supplement 카드.
 export default function Hero() {
+  const navigate = useNavigate();
   const [imgError, setImgError] = useState(false);
   const showImage = HERO.image && !imgError;
 
@@ -148,9 +150,10 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* ── 하단 Bento row: 4개 supplementary 카드 ── */}
+          {/* ── 하단 Bento row: 4개 supplementary 카드 (각 카드 클릭 시 관련 페이지) ── */}
           <BentoCard
             delay={0.1}
+            onClick={() => navigate('/admin/dept/chem')}
             className="md:col-span-3 bg-text-primary text-white"
           >
             <div className="flex items-start justify-between">
@@ -168,6 +171,7 @@ export default function Hero() {
 
           <BentoCard
             delay={0.15}
+            onClick={() => navigate('/admin/dept/chem')}
             className="md:col-span-3 bg-white/80 backdrop-blur"
           >
             <div className="flex items-start justify-between">
@@ -188,6 +192,7 @@ export default function Hero() {
 
           <BentoCard
             delay={0.2}
+            onClick={() => navigate('/student/department')}
             className="md:col-span-3 bg-gradient-to-br from-brand-primary/15 via-white to-brand-secondary/15"
           >
             <div className="flex items-start justify-between">
@@ -210,6 +215,7 @@ export default function Hero() {
 
           <BentoCard
             delay={0.25}
+            onClick={() => navigate('/safety/cases')}
             className="md:col-span-3 bg-brand-accent/15"
           >
             <div className="flex items-start justify-between">
@@ -252,13 +258,23 @@ export default function Hero() {
   );
 }
 
-function BentoCard({ delay = 0, className = '', children }) {
+function BentoCard({ delay = 0, className = '', onClick, children }) {
+  const interactive = typeof onClick === 'function';
   return (
     <motion.div
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, delay }}
-      className={`rounded-3xl border border-black/5 shadow-sm p-5 md:p-6 min-h-[180px] flex flex-col transition hover:-translate-y-1 hover:shadow-xl ${className}`}
+      onClick={onClick}
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onKeyDown={interactive ? (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      } : undefined}
+      className={`rounded-3xl border border-black/5 shadow-sm p-5 md:p-6 min-h-[180px] flex flex-col transition hover:-translate-y-1 hover:shadow-xl ${interactive ? 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-primary/40' : ''} ${className}`}
     >
       {children}
     </motion.div>
