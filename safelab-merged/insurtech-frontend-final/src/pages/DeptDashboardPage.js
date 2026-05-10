@@ -35,6 +35,23 @@ export default function DeptDashboardPage() {
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [notifyStatus, setNotifyStatus] = useState(null); // null | 'sending' | 'sent'
 
+  // DEPT-5: 학과 알림함 (사고 보고서 자동 통보 수신)
+  const [notifications, setNotifications] = useState([]);
+  useEffect(() => {
+    if (!dept) return;
+    try {
+      const raw = localStorage.getItem(`safelab.dept-notifications.${dept.id}`);
+      setNotifications(raw ? JSON.parse(raw) : []);
+    } catch { setNotifications([]); }
+  }, [dept]);
+  const markAllRead = () => {
+    if (!dept) return;
+    const updated = notifications.map((n) => ({ ...n, read: true }));
+    setNotifications(updated);
+    try { localStorage.setItem(`safelab.dept-notifications.${dept.id}`, JSON.stringify(updated)); } catch {}
+  };
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
   // 이번 달 절약 시간 라이브 카운터 (시각 효과)
   const [savedSeconds, setSavedSeconds] = useState(0);
   useEffect(() => {
@@ -217,6 +234,35 @@ export default function DeptDashboardPage() {
             </div>
           </article>
 
+          {/* DEPT-5: 신규 사고 알림함 */}
+          {notifications.length > 0 && (
+            <section>
+              <div className="dd-section__head">
+                <span className="eyebrow">⚡ Live Alerts</span>
+                <h2>
+                  학과 알림함
+                  {unreadCount > 0 && <span className="dd-alert-badge">{unreadCount}</span>}
+                </h2>
+                <p>학생이 사고 신고 시 → 즉시 학과 담당자에게 자동 통보 (수기 보고 0초).</p>
+              </div>
+              <div className="dd-alerts">
+                {notifications.slice(0, 5).map((n) => (
+                  <div key={n.id} className={`dd-alert ${!n.read ? 'is-unread' : ''}`}>
+                    <span className={`pill ${sevPillClass(n.severity)}`}>{n.severity || '관심'}</span>
+                    <div className="dd-alert__body">
+                      <strong>{n.title}</strong>
+                      <small>📍 {n.location} · {new Date(n.createdAt).toLocaleString('ko-KR')}</small>
+                    </div>
+                  </div>
+                ))}
+                {unreadCount > 0 && (
+                  <button type="button" className="t-btn t-btn-ghost dd-alert__mark"
+                    onClick={markAllRead}>모두 읽음 처리</button>
+                )}
+              </div>
+            </section>
+          )}
+
           {/* KPI 카드 4개 */}
           <section>
             <div className="dd-section__head">
@@ -375,6 +421,15 @@ export default function DeptDashboardPage() {
 }
 
 // ─────────────────────────────────────────────────────────
+function sevPillClass(s) {
+  switch (s) {
+    case '심각': return 'pill-red';
+    case '경계': return 'pill-orange';
+    case '주의': return 'pill-orange';
+    case '관심': return 'pill-blue';
+    default: return 'pill-gray';
+  }
+}
 function csvEscape(v) {
   const s = String(v ?? '');
   if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;

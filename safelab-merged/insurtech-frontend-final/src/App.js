@@ -11,6 +11,7 @@ import SafetyQuizPage from './pages/SafetyQuizPage';
 import CertificatePage from './pages/CertificatePage';
 import EmergencyPage from './pages/EmergencyPage';
 import IncidentPhotoPage from './pages/IncidentPhotoPage';
+import IncidentReportPage from './pages/IncidentReportPage';
 import BuildingSafetyPage from './pages/BuildingSafetyPage';
 import IncidentCasesPage from './pages/IncidentCasesPage';
 import MsdsLearnPage from './pages/MsdsLearnPage';
@@ -47,6 +48,7 @@ function App() {
         {/* 긴급 + 사진 사고 신고 */}
         <Route path="/emergency" element={<EmergencyPage />} />
         <Route path="/incident/photo" element={<IncidentPhotoPage />} />
+        <Route path="/incident/report" element={<IncidentReportPage />} />
         <Route path="/buildings" element={<BuildingSafetyPage />} />
         <Route path="/safety/cases" element={<IncidentCasesPage />} />
         <Route path="/safety/msds" element={<MsdsLearnPage />} />

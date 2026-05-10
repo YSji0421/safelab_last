@@ -358,9 +358,23 @@ function ResultView({ result, onRestart, navigate }) {
             </div>
           </div>
         </div>
-        <button type="button" className="t-btn t-btn-ghost" onClick={onRestart}>
-          다시 촬영
-        </button>
+        <div className="ip-result__top-actions">
+          <button type="button" className="t-btn t-btn-ghost" onClick={onRestart}>
+            다시 촬영
+          </button>
+          <button
+            type="button"
+            className="t-btn t-btn-primary"
+            onClick={() => navigate('/incident/report', {
+              state: {
+                result,
+                photoData: result?.previewUrl || null,
+              }
+            })}
+          >
+            📝 보고서 자동 작성 →
+          </button>
+        </div>
       </div>
 
       <div className="ip-grid-2">

@@ -340,3 +340,67 @@
   .dd-incident { grid-template-columns: 80px 1fr; }
   .dd-incident .pill { grid-column: 2; }
 }
+
+/* DEPT-5: 학과 알림함 (사고 자동 통보) */
+.dd-alert-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 10px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 100px;
+  vertical-align: middle;
+  animation: dd-pulse 1.6s infinite;
+}
+@keyframes dd-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6); }
+  50%      { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
+}
+.dd-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dd-alert {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--glass-strong);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.dd-alert.is-unread {
+  background: linear-gradient(135deg, rgba(254, 226, 226, 0.4), rgba(255, 255, 255, 0.7));
+  border-color: rgba(220, 38, 38, 0.3);
+  position: relative;
+}
+.dd-alert.is-unread::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px; height: 6px;
+  background: #dc2626;
+  border-radius: 50%;
+  animation: dd-pulse 1.6s infinite;
+}
+.dd-alert__body strong {
+  display: block;
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+.dd-alert__body small {
+  display: block;
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 4px;
+}
+.dd-alert__mark { align-self: flex-end; font-size: 12px; }
