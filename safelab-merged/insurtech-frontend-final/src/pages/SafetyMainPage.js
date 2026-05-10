@@ -225,6 +225,28 @@ export default function SafetyMainPage() {
             </div>
             <span className="sm-extra-arrow">→</span>
           </button>
+          <button
+            className="sm-extra-item"
+            onClick={() => navigate('/insurance/enroll')}
+          >
+            <span>🛡️</span>
+            <div>
+              <strong>연구실안전공제 의무 가입</strong>
+              <small>「연구실 안전환경 조성에 관한 법률」 제26조 — 학교 단체 가입에 본인 등록</small>
+            </div>
+            <span className="sm-extra-arrow">→</span>
+          </button>
+          <button
+            className="sm-extra-item"
+            onClick={() => navigate('/insurance/claim')}
+          >
+            <span>📋</span>
+            <div>
+              <strong>사고 발생 시 보상 청구</strong>
+              <small>약관 제11조 통지 의무 — 14일 이내 한국교육시설안전원 접수</small>
+            </div>
+            <span className="sm-extra-arrow">→</span>
+          </button>
         </div>
       </div>
     </div>
