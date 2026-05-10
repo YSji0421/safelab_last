@@ -6,7 +6,7 @@ import {
   HardHat,
   CheckCircle2,
   GraduationCap,
-  ScrollText,
+  BellRing,
   Activity,
   TrendingUp,
 } from 'lucide-react';
@@ -172,18 +172,16 @@ export default function Hero() {
           >
             <div className="flex items-start justify-between">
               <span className="text-[10px] font-semibold uppercase tracking-widest text-text-muted">
-                Coverage
+                Alerts
               </span>
-              <ScrollText size={16} className="text-text-muted" />
+              <BellRing size={16} className="text-text-muted" />
             </div>
             <div className="mt-auto pt-4">
               <p className="font-display font-extrabold text-2xl md:text-[28px] leading-tight tracking-tight">
-                요양 · 장해 · 유족
-                <br />
-                입원 · 장의비
+                미이수자<br />일괄 알림
               </p>
               <p className="mt-2 text-xs text-text-muted">
-                연구실안전공제 5종 보장
+                자동 필터링 → 카톡·이메일·문자 1클릭
               </p>
             </div>
           </BentoCard>
