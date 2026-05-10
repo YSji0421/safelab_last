@@ -220,13 +220,13 @@ export default function Hero() {
             </div>
             <div className="mt-auto pt-4">
               <p className="font-display font-extrabold text-2xl md:text-[28px] leading-tight tracking-tight">
-                PDF 4종
+                공식문건 4종
               </p>
               <p className="mt-1 text-xs font-semibold text-text-primary leading-snug">
                 대학안전관리계획 · 약관 · 안전교육자료 · 안전관리규정
               </p>
               <p className="mt-1 text-[11px] text-text-muted">
-                인하공전 공식 문서 RAG 시드
+                인하공전 발행 — AI 학습 시드
               </p>
             </div>
           </BentoCard>
