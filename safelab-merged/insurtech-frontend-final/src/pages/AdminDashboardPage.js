@@ -149,9 +149,15 @@ export default function AdminDashboardPage() {
           </div>
           <div className="ad-dept-list">
             {deptProgress.map((d) => (
-              <div key={d.id} className={`ad-dept risk-${d.risk}`}>
+              <button
+                key={d.id}
+                type="button"
+                className={`ad-dept risk-${d.risk} ad-dept--clickable`}
+                onClick={() => navigate(`/admin/dept/${d.id}`)}
+                title={`${d.name} 담당자 대시보드 열기`}
+              >
                 <div className="ad-dept-row">
-                  <strong>{d.name}</strong>
+                  <strong>{d.name} <span className="ad-dept-arrow">→</span></strong>
                   <span>{d.completed} / {d.total}명 ({d.rate}%)</span>
                 </div>
                 <div className="ad-dept-bar">
@@ -161,8 +167,9 @@ export default function AdminDashboardPage() {
                   {d.risk === 'high' && <span className="pill pill-red">⚠ 위험도 높음</span>}
                   {d.risk === 'mid' && <span className="pill" style={{ background: '#FEF3C7', color: '#92400E' }}>주의</span>}
                   {d.risk === 'low' && <span className="pill pill-green">양호</span>}
+                  <span className="ad-dept-cta">담당자 화면 열기</span>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </section>

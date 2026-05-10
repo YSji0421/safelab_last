@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import SafetyLandingPage from './pages/SafetyLandingPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import DeptDashboardPage from './pages/DeptDashboardPage';
 import DepartmentSelectPage from './pages/DepartmentSelectPage';
 import SafetyMainPage from './pages/SafetyMainPage';
 import SafetyScenarioPage from './pages/SafetyScenarioPage';
@@ -34,6 +35,7 @@ function App() {
         {/* 관리자 */}
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/admin" element={<AdminDashboardPage />} />
+        <Route path="/admin/dept/:deptId" element={<DeptDashboardPage />} />
 
         {/* 학생 안전교육 */}
         <Route path="/student/department" element={<DepartmentSelectPage />} />
