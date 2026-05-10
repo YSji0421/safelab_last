@@ -160,11 +160,9 @@ export default function Hero() {
               <TrendingUp size={16} className="text-white/80" />
             </div>
             <div className="mt-auto pt-6">
-              <p className="font-display font-extrabold text-3xl md:text-[36px] leading-none tracking-tight">
-                2~3시간<span className="text-white/60"> → </span>0초
+              <p className="font-display font-extrabold text-2xl md:text-[28px] leading-tight tracking-tight">
+                학과 담당자<br />수기 집계 자동화
               </p>
-              <p className="mt-2 text-sm text-white/70">학과 담당자 수기 집계 자동화</p>
-              <p className="mt-1 text-[11px] text-white/50">출처: 학교 안전관리위원회 회의록</p>
             </div>
           </BentoCard>
 
