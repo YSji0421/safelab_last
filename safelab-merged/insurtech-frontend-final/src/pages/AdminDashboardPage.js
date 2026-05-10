@@ -123,11 +123,11 @@ export default function AdminDashboardPage() {
           <div className="ad-kpi">
             <div className="ad-kpi-label">전체 이수율</div>
             <div className="ad-kpi-value">{kpi.completionRate}%</div>
-            <div className="ad-kpi-sub">{kpi.enrolledStudents} / {kpi.totalStudents}명</div>
+            <div className="ad-kpi-sub">약 {kpi.enrolledStudents} / 약 {kpi.totalStudents}명</div>
           </div>
           <div className="ad-kpi pending">
             <div className="ad-kpi-label">미이수자</div>
-            <div className="ad-kpi-value">{kpi.pendingStudents}명</div>
+            <div className="ad-kpi-value">약 {kpi.pendingStudents}명</div>
             <button className="ad-kpi-link" onClick={() => setShowPending(true)}>명단 보기 →</button>
           </div>
           <div className="ad-kpi">
@@ -158,7 +158,7 @@ export default function AdminDashboardPage() {
               >
                 <div className="ad-dept-row">
                   <strong>{d.name} <span className="ad-dept-arrow">→</span></strong>
-                  <span>{d.completed} / {d.total}명 ({d.rate}%)</span>
+                  <span>약 {d.completed} / 약 {d.total}명 ({d.rate}%)</span>
                 </div>
                 <div className="ad-dept-bar">
                   <div className="ad-dept-fill" style={{ width: `${d.rate}%` }} />

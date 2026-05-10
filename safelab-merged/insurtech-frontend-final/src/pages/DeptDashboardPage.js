@@ -275,7 +275,7 @@ export default function DeptDashboardPage() {
               <h2>SafeLab이 자동 집계 가능한 인하공전 학생</h2>
               <p>
                 회의록(곽 위원): "실제 집계 소요 시간은 학과당 <strong>2~3시간</strong>"
-                → SafeLab 자동 집계로 <strong>0초</strong>. 현재 시범 4학과 850명 적용 — 전 학과 확장 시 인하공전 전체.
+                → SafeLab 자동 집계로 <strong>0초</strong>. 현재 시범 4학과 약 850명 적용 — 전 학과 확장 시 인하공전 전체.
               </p>
             </div>
             <div className="dd-savings__display">
@@ -326,16 +326,16 @@ export default function DeptDashboardPage() {
             <div className="dd-kpi-grid">
               <article className="dd-kpi">
                 <span className="dd-kpi__label">총 학생</span>
-                <span className="dd-kpi__value">{progress.total.toLocaleString()}<small>명</small></span>
+                <span className="dd-kpi__value"><small className="dd-kpi__approx">약 </small>{progress.total.toLocaleString()}<small>명</small></span>
               </article>
               <article className="dd-kpi dd-kpi--ok">
                 <span className="dd-kpi__label">이수 완료</span>
-                <span className="dd-kpi__value">{completedCount.toLocaleString()}<small>명</small></span>
+                <span className="dd-kpi__value"><small className="dd-kpi__approx">약 </small>{completedCount.toLocaleString()}<small>명</small></span>
                 <span className="dd-kpi__sub">{progress.rate}%</span>
               </article>
               <article className="dd-kpi dd-kpi--warn">
                 <span className="dd-kpi__label">미이수자</span>
-                <span className="dd-kpi__value">{pendingCount.toLocaleString()}<small>명</small></span>
+                <span className="dd-kpi__value"><small className="dd-kpi__approx">약 </small>{pendingCount.toLocaleString()}<small>명</small></span>
                 <span className="dd-kpi__sub">{pendingRate}%</span>
               </article>
               <article className={`dd-kpi ${progress.risk === 'high' ? 'dd-kpi--risk' : ''}`}>

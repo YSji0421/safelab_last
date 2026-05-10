@@ -425,3 +425,12 @@
   border-radius: 6px;
   letter-spacing: 0.02em;
 }
+
+/* "약" 접두사 — 추정값 표시 */
+.dd-kpi__approx {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink-mute, #94a3b8);
+  margin-right: 2px;
+  letter-spacing: -0.01em;
+}
