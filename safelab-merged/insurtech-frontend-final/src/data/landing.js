@@ -44,7 +44,7 @@ export const HERO = {
   megaText: 'SAFE LAB',
   headline: '교육 · 공제 · 대응\n안전, 하나의 플랫폼으로.',
   subcopy:
-    '연구실 안전교육 이수부터 「연구실 안전환경 조성에 관한 법률」 제26조 의무 가입까지 — SafeLab이 한국교육시설안전원 연구실안전공제를 한 번에 연결합니다.',
+    '인하공전 안전관리위원회가 우려한 \'학과당 2~3시간 안전교육 집계 부담\'과 \'8월에야 가동될 차세대 행정 시스템 안전·보건 모듈\' — SafeLab은 그 공백을 오늘 메웁니다. 학생의 학과별 시나리오·퀴즈 이수가 자동 집계되고, 사고 시 AI가 사진을 분석해 4등급 분류 + 신고 체인 안내까지. 학과 담당자 추가 업무는 0건입니다.',
   ctaPrimary: { label: '학과별 안전교육 시작', to: '/student/department' },
   ctaSecondary: { label: '라인업 살펴보기', to: '#lineup' },
   // 이미지를 public/landing/safelab-hero.png 에 저장하면 자동 노출.
