@@ -54,15 +54,6 @@ export default function About() {
               ))}
             </div>
 
-            <ul className="mt-8 flex flex-wrap gap-2" aria-label="키워드">
-              {ABOUT.tags.map((tag) => (
-                <li key={tag}>
-                  <span className="inline-flex items-center rounded-full bg-brand-primary/10 text-brand-primary px-3 py-1.5 text-xs font-semibold">
-                    {tag}
-                  </span>
-                </li>
-              ))}
-            </ul>
           </motion.div>
 
           <motion.div
