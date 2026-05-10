@@ -42,7 +42,7 @@ export const HEADER_AUTH = [
 export const HERO = {
   indicator: { current: '05', total: '12' },
   megaText: 'SAFE LAB',
-  headline: '안전한 연구실,\n법정의무 연구실안전공제',
+  headline: '안전교육 · 공제 · 사고대응,\n하나의 플랫폼으로.',
   subcopy:
     '연구실 안전교육 이수부터 「연구실 안전환경 조성에 관한 법률」 제26조 의무 가입까지 — SafeLab이 한국교육시설안전원 연구실안전공제를 한 번에 연결합니다.',
   ctaPrimary: { label: '학과별 안전교육 시작', to: '/student/department' },
