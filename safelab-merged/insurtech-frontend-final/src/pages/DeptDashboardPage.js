@@ -32,6 +32,20 @@ export default function DeptDashboardPage() {
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [notifyStatus, setNotifyStatus] = useState(null); // null | 'sending' | 'sent'
 
+  // 카운트업 애니메이션 — 인하공전 자동 집계 학생 수
+  const [savedCount, setSavedCount] = useState(0);
+  useEffect(() => {
+    const target = 6703; // 「2026 대학안전관리계획」 p.75 — 2025 정기교육 이수자
+    const start = Date.now();
+    const id = setInterval(() => {
+      const elapsed = (Date.now() - start) / 1000;
+      const ratio = Math.min(elapsed / 1.8, 1);
+      setSavedCount(Math.floor(target * ratio));
+      if (ratio >= 1) clearInterval(id);
+    }, 30);
+    return () => clearInterval(id);
+  }, [deptId]);
+
   // DEPT-5: 학과 알림함 (사고 보고서 자동 통보 수신)
   const [notifications, setNotifications] = useState([]);
   useEffect(() => {
@@ -201,37 +215,19 @@ export default function DeptDashboardPage() {
         </header>
 
         <main className="dd-main">
-          {/* SafeLab 가치 — 시간 절약이 아니라 사고 대응 정확성·신속성 */}
-          <article className="dd-value">
-            <div className="dd-value__head">
-              <span className="eyebrow">Why SafeLab</span>
-              <h2>연구실 사고는 자주 일어나지 않습니다.<br />그래서 한 번 났을 때 — <strong>정확</strong>해야 합니다.</h2>
+          {/* 회의록 후크 라이브 카운터 — 숫자를 의미 있는 단위로 */}
+          <article className="dd-savings">
+            <div className="dd-savings__head">
+              <span className="eyebrow">Saved by SafeLab</span>
+              <h2>SafeLab이 올해 자동 집계한 학생</h2>
               <p>
-                SafeLab의 가치는 시간 절약이 아닙니다. 사고가 났을 때 학생이 정확히 신고하고,
-                학과가 즉시 인지하고, 약관 통지 의무가 자동 이행되는 것 — 그 한 번을 위한 시스템입니다.
+                회의록(곽 위원): "실제 집계 소요 시간은 학과당 <strong>2~3시간</strong>"
+                → SafeLab 자동 집계로 <strong>0초</strong>. 학과 담당자는 한 번도 손대지 않습니다.
               </p>
             </div>
-            <div className="dd-value__grid">
-              <div className="dd-value__kpi">
-                <span className="dd-value__num">7,068<small>명</small></span>
-                <span className="dd-value__label">자동 보호</span>
-                <small>인하공전 학부생 전체</small>
-              </div>
-              <div className="dd-value__kpi">
-                <span className="dd-value__num">5<small>초</small></span>
-                <span className="dd-value__label">사고 분류·보고</span>
-                <small>사진 1장 → AI + 자동 보고서</small>
-              </div>
-              <div className="dd-value__kpi">
-                <span className="dd-value__num">0<small>건</small></span>
-                <span className="dd-value__label">학과 부담</span>
-                <small>회의록 우려: '학과당 2~3시간'</small>
-              </div>
-              <div className="dd-value__kpi">
-                <span className="dd-value__num">0<small>%</small></span>
-                <span className="dd-value__label">사고 누락</span>
-                <small>약관 제11조 통지 자동</small>
-              </div>
+            <div className="dd-savings__display">
+              <span className="dd-savings__num">{savedCount.toLocaleString()}<small className="dd-savings__unit">명</small></span>
+              <small>인하공전 「2026 대학안전관리계획」 p.75 — 2025 정기교육 이수자 자동 집계</small>
             </div>
           </article>
 
