@@ -110,6 +110,8 @@ export const LINEUP = {
       pillText: 'text-cyan-700',
       to: '/student/department',
       ctaLabel: '학과 선택하고 시작',
+      image: '/landing/safelab-education.jpg',
+      imageAlt: 'SafeLab Education — 학과별 안전교육 일러스트',
     },
     {
       key: 'campusguard',
