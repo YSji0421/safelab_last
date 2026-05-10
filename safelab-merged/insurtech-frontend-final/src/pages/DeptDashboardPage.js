@@ -60,10 +60,10 @@ export default function DeptDashboardPage() {
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [notifyStatus, setNotifyStatus] = useState(null); // null | 'sending' | 'sent'
 
-  // 카운트업 애니메이션 — 인하공전 자동 집계 학생 수
+  // 카운트업 애니메이션 — 인하공전 학부생 전체 (확장 가능 인원)
   const [savedCount, setSavedCount] = useState(0);
   useEffect(() => {
-    const target = 6703; // 「2026 대학안전관리계획」 p.75 — 2025 정기교육 이수자
+    const target = 7068; // 「2026 대학안전관리계획」 p.4 — 인하공전 학부생 전체 (확장 시 적용 인원)
     const start = Date.now();
     const id = setInterval(() => {
       const elapsed = (Date.now() - start) / 1000;
@@ -268,19 +268,19 @@ export default function DeptDashboardPage() {
         </header>
 
         <main className="dd-main">
-          {/* 회의록 후크 라이브 카운터 — 숫자를 의미 있는 단위로 */}
+          {/* 회의록 후크 라이브 카운터 — 인하공전 전체 확장 가능 인원 */}
           <article className="dd-savings">
             <div className="dd-savings__head">
               <span className="eyebrow">Saved by SafeLab</span>
-              <h2>SafeLab이 올해 자동 집계한 학생</h2>
+              <h2>SafeLab이 자동 집계 가능한 인하공전 학생</h2>
               <p>
                 회의록(곽 위원): "실제 집계 소요 시간은 학과당 <strong>2~3시간</strong>"
-                → SafeLab 자동 집계로 <strong>0초</strong>. 학과 담당자는 한 번도 손대지 않습니다.
+                → SafeLab 자동 집계로 <strong>0초</strong>. 현재 시범 4학과 850명 적용 — 전 학과 확장 시 인하공전 전체.
               </p>
             </div>
             <div className="dd-savings__display">
               <span className="dd-savings__num">{savedCount.toLocaleString()}<small className="dd-savings__unit">명</small></span>
-              <small>인하공전 「2026 대학안전관리계획」 p.75 — 2025 정기교육 이수자 자동 집계</small>
+              <small>인하공전 「2026 대학안전관리계획」 p.4 — 학부생 전체 (확장 적용 가능 인원)</small>
             </div>
           </article>
 

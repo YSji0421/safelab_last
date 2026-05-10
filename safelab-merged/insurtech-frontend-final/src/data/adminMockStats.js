@@ -1,22 +1,31 @@
 // 관리자 대시보드용 통계 — 인하공전 「2026 대학안전관리계획」 실제 수치 반영.
-// (학과별 인원은 PDF가 학과 분리 통계를 제공하지 않아 공대 4학과 합 기준으로 재할당)
+// 인하공전 학부생 합계: 7,068명 (PDF p.4) / 학과 약 28개 / 학과당 평균 ≈ 252명.
+// SafeLab은 시범 4학과(공대 계열)에 적용한 sample 데이터.
+//
+// 출처:
+// - 학교 전체 학생 수: PDF p.4 = 7,068명
+// - 학과 정원 (학과당 약 200명대): 인하공전 2026학년도 입학전형 시행계획 + 학과당 평균 추정
+// - 이수율: PDF p.75 2025 정기교육 이수자 6,703명 / 7,068명 ≈ 95%
 
 export const ADMIN_KPI = {
-  totalStudents: 7068, // PDF p.4 학부생 합계
-  enrolledStudents: 6703, // PDF p.75 2025 정기교육훈련 학생 (실제 이수 인원)
-  completionRate: 95, // 6703/7068
-  pendingStudents: 365, // 7068 - 6703
+  // 시범 적용 4학과 기준 — 학교 전체로 확장 시 7,068명까지 가능
+  totalStudents: 850, // 4학과 합 (180+250+220+200)
+  enrolledStudents: 812, // 95.5% 이수
+  completionRate: 95,
+  pendingStudents: 38,
   recentIncidents7d: 0, // 최근 7일 신고 없음 (5년 평균 1.2건/년)
-  scenariosCompleted: 13406, // 6703명 × 평균 2개 시나리오
+  scenariosCompleted: 1624, // 812명 × 평균 2개 시나리오
+  // 확장 가능 — 전 학과 적용 시
+  schoolTotalStudents: 7068, // PDF p.4
 };
 
-// SafeLab이 다루는 4개 공대 학과 — 인하공전 실제 학과명, 공학계열 학생 분포 추정
-// (PDF가 학과별 미분리, 본 앱 시연용 4학과 표본 — 합 ≈ 3,500)
+// SafeLab 시범 적용 4학과 — 인하공전 실제 학과명 + 공대 계열 정원 추정 (학과당 약 200명대)
+// 2년제 정원 기준. 화공환경과 = 화학생명공학과 계열, 기계과 = 기계공학과 계열 등
 export const DEPT_PROGRESS = [
-  { id: 'chem', name: '화공환경과', total: 820, completed: 781, rate: 95, risk: 'high' },
-  { id: 'mech', name: '기계과', total: 1050, completed: 998, rate: 95, risk: 'high' },
-  { id: 'elec', name: '전기정보과', total: 880, completed: 844, rate: 96, risk: 'mid' },
-  { id: 'comp', name: '컴퓨터시스템공학과', total: 750, completed: 720, rate: 96, risk: 'low' },
+  { id: 'chem', name: '화공환경과', total: 180, completed: 171, rate: 95, risk: 'high' },
+  { id: 'mech', name: '기계과', total: 250, completed: 238, rate: 95, risk: 'high' },
+  { id: 'elec', name: '전기정보과', total: 220, completed: 211, rate: 96, risk: 'mid' },
+  { id: 'comp', name: '컴퓨터시스템공학과', total: 200, completed: 192, rate: 96, risk: 'low' },
 ];
 
 // 인하공전 5년간 연구실사고 + 산업재해 부상자 분포 — PDF p.32, p.51 통계 기반
