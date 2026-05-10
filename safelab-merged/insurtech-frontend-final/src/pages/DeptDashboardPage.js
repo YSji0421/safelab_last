@@ -11,9 +11,6 @@ import './DeptDashboardPage.css';
 // 학과 담당자 전용 대시보드 — 회의록 「학과당 2~3시간 집계 부담」 정조준.
 // 자동 집계 + CSV 내보내기 + 일괄 알림 발송 모의 + 차세대 시스템 호환 export.
 
-// 학과 담당자가 매학기 수기로 처리하던 평균 시간 (회의록 곽 위원 발언)
-const MANUAL_HOURS_PER_DEPT = 2.5;
-
 export default function DeptDashboardPage() {
   const { deptId } = useParams();
   const navigate = useNavigate();
@@ -51,21 +48,6 @@ export default function DeptDashboardPage() {
     try { localStorage.setItem(`safelab.dept-notifications.${dept.id}`, JSON.stringify(updated)); } catch {}
   };
   const unreadCount = notifications.filter((n) => !n.read).length;
-
-  // 이번 달 절약 시간 라이브 카운터 (시각 효과)
-  const [savedSeconds, setSavedSeconds] = useState(0);
-  useEffect(() => {
-    if (!progress) return;
-    const target = MANUAL_HOURS_PER_DEPT * 3600; // 학과당 2.5h를 초로
-    const start = Date.now();
-    const id = setInterval(() => {
-      const elapsed = (Date.now() - start) / 1000;
-      const ratio = Math.min(elapsed / 1.8, 1); // 1.8초간 카운트업
-      setSavedSeconds(Math.floor(target * ratio));
-      if (ratio >= 1) clearInterval(id);
-    }, 30);
-    return () => clearInterval(id);
-  }, [progress]);
 
   if (!dept || !progress) {
     return (
@@ -219,18 +201,37 @@ export default function DeptDashboardPage() {
         </header>
 
         <main className="dd-main">
-          {/* 회의록 후크 라이브 카운터 */}
-          <article className="dd-savings">
-            <div className="dd-savings__head">
-              <span className="eyebrow">Saved by SafeLab</span>
-              <h2>이번 학기 학과 담당자가 절약한 시간</h2>
+          {/* SafeLab 가치 — 시간 절약이 아니라 사고 대응 정확성·신속성 */}
+          <article className="dd-value">
+            <div className="dd-value__head">
+              <span className="eyebrow">Why SafeLab</span>
+              <h2>연구실 사고는 자주 일어나지 않습니다.<br />그래서 한 번 났을 때 — <strong>정확</strong>해야 합니다.</h2>
               <p>
-                회의록(곽 위원): "실제 집계 소요 시간은 학과당 <strong>2~3시간</strong>" → SafeLab 자동 집계로 <strong>0초</strong>.
+                SafeLab의 가치는 시간 절약이 아닙니다. 사고가 났을 때 학생이 정확히 신고하고,
+                학과가 즉시 인지하고, 약관 통지 의무가 자동 이행되는 것 — 그 한 번을 위한 시스템입니다.
               </p>
             </div>
-            <div className="dd-savings__display">
-              <span className="dd-savings__num">{formatHM(savedSeconds)}</span>
-              <small>학과당 매학기 평균 — 7,068명 × 4학과 → 연간 <strong>학교 전체 ~200시간</strong> 절감</small>
+            <div className="dd-value__grid">
+              <div className="dd-value__kpi">
+                <span className="dd-value__num">7,068<small>명</small></span>
+                <span className="dd-value__label">자동 보호</span>
+                <small>인하공전 학부생 전체</small>
+              </div>
+              <div className="dd-value__kpi">
+                <span className="dd-value__num">5<small>초</small></span>
+                <span className="dd-value__label">사고 분류·보고</span>
+                <small>사진 1장 → AI + 자동 보고서</small>
+              </div>
+              <div className="dd-value__kpi">
+                <span className="dd-value__num">0<small>건</small></span>
+                <span className="dd-value__label">학과 부담</span>
+                <small>회의록 우려: '학과당 2~3시간'</small>
+              </div>
+              <div className="dd-value__kpi">
+                <span className="dd-value__num">0<small>%</small></span>
+                <span className="dd-value__label">사고 누락</span>
+                <small>약관 제11조 통지 자동</small>
+              </div>
             </div>
           </article>
 
@@ -441,11 +442,3 @@ function ymd() {
   return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
 }
 
-function formatHM(totalSec) {
-  const h = Math.floor(totalSec / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const s = totalSec % 60;
-  if (h > 0) return `${h}시간 ${String(m).padStart(2, '0')}분`;
-  if (m > 0) return `${m}분 ${String(s).padStart(2, '0')}초`;
-  return `${s}초`;
-}

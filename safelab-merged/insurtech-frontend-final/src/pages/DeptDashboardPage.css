@@ -404,3 +404,92 @@
   margin-top: 4px;
 }
 .dd-alert__mark { align-self: flex-end; font-size: 12px; }
+
+/* SafeLab 핵심 가치 카드 (시간 절약이 아닌 사고 대응 정확성) */
+.dd-value {
+  padding: 32px 36px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border-radius: var(--r-xl, 32px);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.dd-value::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 90% 10%, rgba(20, 184, 166, 0.2), transparent 60%),
+              radial-gradient(circle at 10% 90%, rgba(251, 191, 36, 0.12), transparent 50%);
+  pointer-events: none;
+}
+.dd-value__head { position: relative; z-index: 1; max-width: 760px; margin-bottom: 24px; }
+.dd-value__head .eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fbbf24;
+}
+.dd-value__head h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  margin: 8px 0 12px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+.dd-value__head h2 strong { color: #fbbf24; }
+.dd-value__head p {
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.7;
+  margin: 0;
+}
+.dd-value__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+.dd-value__kpi {
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dd-value__num {
+  font-size: 36px;
+  font-weight: 900;
+  color: #14b8a6;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.dd-value__num small {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(20, 184, 166, 0.7);
+  margin-left: 4px;
+}
+.dd-value__label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.005em;
+  margin-top: 4px;
+}
+.dd-value__kpi small:last-child {
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.45;
+}
+
+@media (max-width: 720px) {
+  .dd-value { padding: 22px; }
+  .dd-value__head h2 { font-size: 18px; }
+  .dd-value__num { font-size: 28px; }
+}
