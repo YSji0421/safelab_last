@@ -129,22 +129,22 @@ export default function Hero() {
             {/* 우상 floating chip */}
             <div className="absolute top-4 right-4 rounded-2xl bg-white/95 backdrop-blur border border-black/5 shadow-lg px-3.5 py-2.5">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-text-muted">
-                Risk
+                Severity
               </p>
               <p className="font-display font-extrabold text-base text-brand-secondary leading-tight">
-                Low
+                4등급
               </p>
-              <p className="text-[10px] text-text-muted">실험실 평균</p>
+              <p className="text-[10px] text-text-muted">AI 자동 분류</p>
             </div>
             {/* 좌하 floating chip */}
             <div className="absolute bottom-4 left-4 rounded-2xl bg-white/95 backdrop-blur border border-black/5 shadow-lg px-3.5 py-2.5">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-text-muted">
-                Completion
+                Coverage
               </p>
               <p className="font-display font-extrabold text-base text-text-primary leading-tight">
-                94.2%
+                7,068<span className="text-sm font-bold">명</span>
               </p>
-              <p className="text-[10px] text-text-muted">올해 이수율</p>
+              <p className="text-[10px] text-text-muted">인하공전 학생 전체</p>
             </div>
           </motion.div>
 
@@ -155,15 +155,16 @@ export default function Hero() {
           >
             <div className="flex items-start justify-between">
               <span className="text-[10px] font-semibold uppercase tracking-widest text-white/60">
-                Stats
+                Automation
               </span>
               <TrendingUp size={16} className="text-white/80" />
             </div>
             <div className="mt-auto pt-6">
-              <p className="font-display font-extrabold text-4xl md:text-[44px] leading-none">
-                94.2<span className="text-2xl text-white/60">%</span>
+              <p className="font-display font-extrabold text-3xl md:text-[36px] leading-none tracking-tight">
+                2~3시간<span className="text-white/60"> → </span>0초
               </p>
-              <p className="mt-2 text-sm text-white/70">올해 이수율 — 작년 대비 +18%p</p>
+              <p className="mt-2 text-sm text-white/70">학과 담당자 수기 집계 자동화</p>
+              <p className="mt-1 text-[11px] text-white/50">출처: 학교 안전관리위원회 회의록</p>
             </div>
           </BentoCard>
 
@@ -217,31 +218,37 @@ export default function Hero() {
           >
             <div className="flex items-start justify-between">
               <span className="text-[10px] font-semibold uppercase tracking-widest text-text-muted">
-                Compliance
+                Real Data
               </span>
               <Activity size={16} className="text-brand-accent" />
             </div>
             <div className="mt-auto pt-4">
               <p className="font-display font-extrabold text-2xl md:text-[28px] leading-tight tracking-tight">
-                「제26조」
+                PDF 4종
               </p>
-              <p className="mt-1 text-sm font-semibold text-text-primary">
-                연구실 안전환경 조성에<br />관한 법률 의무 가입
+              <p className="mt-1 text-xs font-semibold text-text-primary leading-snug">
+                대학안전관리계획 · 약관 · 안전교육자료 · 안전관리규정
+              </p>
+              <p className="mt-1 text-[11px] text-text-muted">
+                인하공전 공식 문서 RAG 시드
               </p>
             </div>
           </BentoCard>
         </div>
 
-        {/* 체크 라인 (선택) */}
+        {/* 체크 라인 — 우리 프로젝트가 실제로 구현한 가치 4개 */}
         <ul className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-text-muted">
           <li className="inline-flex items-center gap-1.5">
-            <CheckCircle2 size={14} className="text-brand-secondary" /> 법정의무교육 자동화
+            <CheckCircle2 size={14} className="text-brand-secondary" /> 학과 담당자 부담 0건
           </li>
           <li className="inline-flex items-center gap-1.5">
-            <CheckCircle2 size={14} className="text-brand-secondary" /> 공제료 차등 적용
+            <CheckCircle2 size={14} className="text-brand-secondary" /> AI 사진 5초 사고 분류
           </li>
           <li className="inline-flex items-center gap-1.5">
-            <CheckCircle2 size={14} className="text-brand-secondary" /> 공제급여 청구 원클릭
+            <CheckCircle2 size={14} className="text-brand-secondary" /> 사고 발생 시 학과 즉시 통보
+          </li>
+          <li className="inline-flex items-center gap-1.5">
+            <CheckCircle2 size={14} className="text-brand-secondary" /> 보상 청구 원클릭
           </li>
         </ul>
       </div>
