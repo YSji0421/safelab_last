@@ -110,8 +110,6 @@ export const LINEUP = {
       pillText: 'text-cyan-700',
       to: '/student/department',
       ctaLabel: '학과 선택하고 시작',
-      image: '/landing/safelab-dashboard.png',
-      imageAlt: 'SafeLab 대시보드 UI 목업',
     },
     {
       key: 'campusguard',
@@ -124,6 +122,8 @@ export const LINEUP = {
       pillText: 'text-pink-700',
       to: '/insurance/consult',
       ctaLabel: '공제 상담 시작',
+      image: '/landing/campusguard-mutual.png',
+      imageAlt: 'CampusGuard Mutual — CGM 방패 + AI 약관 분석 상담실 일러스트',
     },
     {
       key: 'riskradar',
@@ -136,6 +136,8 @@ export const LINEUP = {
       pillText: 'text-yellow-700',
       to: '/admin/login',
       ctaLabel: '관리자 로그인',
+      image: '/landing/safelab-dashboard.png',
+      imageAlt: 'RiskRadar Admin 대시보드 목업 — 실험실 활성도·이수율',
     },
   ],
 };
