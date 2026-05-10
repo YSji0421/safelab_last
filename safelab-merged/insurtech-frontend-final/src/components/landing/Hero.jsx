@@ -129,15 +129,6 @@ export default function Hero() {
               </>
             )}
             {/* 우상 floating chip */}
-            <div className="absolute top-4 right-4 rounded-2xl bg-white/95 backdrop-blur border border-black/5 shadow-lg px-3.5 py-2.5">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-text-muted">
-                Severity
-              </p>
-              <p className="font-display font-extrabold text-base text-brand-secondary leading-tight">
-                4등급
-              </p>
-              <p className="text-[10px] text-text-muted">AI 자동 분류</p>
-            </div>
             {/* 좌하 floating chip */}
             <div className="absolute bottom-4 left-4 rounded-2xl bg-white/95 backdrop-blur border border-black/5 shadow-lg px-3.5 py-2.5">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-text-muted">
