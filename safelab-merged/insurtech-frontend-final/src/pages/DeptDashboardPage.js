@@ -11,22 +11,50 @@ import './DeptDashboardPage.css';
 // 학과 담당자 전용 대시보드 — 회의록 「학과당 2~3시간 집계 부담」 정조준.
 // 자동 집계 + CSV 내보내기 + 일괄 알림 발송 모의 + 차세대 시스템 호환 export.
 
+// 학교 전체 통합 뷰 (default) — 4학과 합산
+const ALL_DEPT = {
+  id: 'all',
+  name: '인하공전 전체',
+  shortName: '전체',
+  icon: '🏫',
+  accent: '#0f172a',
+};
+
 export default function DeptDashboardPage() {
   const { deptId } = useParams();
   const navigate = useNavigate();
-  const dept = getDepartment(deptId);
-  const progress = DEPT_PROGRESS.find((d) => d.id === deptId);
+  const isAll = deptId === 'all';
+  const dept = isAll ? ALL_DEPT : getDepartment(deptId);
 
-  // 학과 미이수자 필터
+  // 학과별 진척도 (전체 모드면 4학과 합산)
+  const progress = useMemo(() => {
+    if (isAll) {
+      const sum = DEPT_PROGRESS.reduce(
+        (acc, d) => ({ total: acc.total + d.total, completed: acc.completed + d.completed }),
+        { total: 0, completed: 0 },
+      );
+      const rate = sum.total ? Math.round((sum.completed / sum.total) * 100) : 0;
+      // 위험도: 학과 중 high 있으면 high, 아니면 mid/low 중 가장 높은 것
+      const risks = DEPT_PROGRESS.map((d) => d.risk);
+      const risk = risks.includes('high') ? 'high' : risks.includes('mid') ? 'mid' : 'low';
+      return { id: 'all', name: '인하공전 전체', ...sum, rate, risk };
+    }
+    return DEPT_PROGRESS.find((d) => d.id === deptId);
+  }, [deptId, isAll]);
+
+  // 미이수자 필터 (전체 모드면 모든 학과)
   const pendingForDept = useMemo(() => {
     if (!dept) return [];
+    if (isAll) return PENDING_STUDENTS_FALLBACK;
     return PENDING_STUDENTS_FALLBACK.filter((s) => s.dept === dept.name);
-  }, [dept]);
+  }, [dept, isAll]);
 
+  // 최근 사고 (전체 모드면 모든 학과)
   const recentForDept = useMemo(() => {
     if (!dept) return [];
+    if (isAll) return RECENT_INCIDENTS_FALLBACK;
     return RECENT_INCIDENTS_FALLBACK.filter((i) => i.dept === dept.name);
-  }, [dept]);
+  }, [dept, isAll]);
 
   // 선택 상태
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -51,15 +79,39 @@ export default function DeptDashboardPage() {
   useEffect(() => {
     if (!dept) return;
     try {
-      const raw = localStorage.getItem(`safelab.dept-notifications.${dept.id}`);
-      setNotifications(raw ? JSON.parse(raw) : []);
+      if (isAll) {
+        // 4학과 알림 모두 모아서 시간 역순 정렬
+        const all = [];
+        for (const d of DEPARTMENT_LIST) {
+          const raw = localStorage.getItem(`safelab.dept-notifications.${d.id}`);
+          if (raw) {
+            const arr = JSON.parse(raw);
+            arr.forEach((n) => all.push({ ...n, _deptId: d.id, _deptName: d.name }));
+          }
+        }
+        all.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setNotifications(all);
+      } else {
+        const raw = localStorage.getItem(`safelab.dept-notifications.${dept.id}`);
+        setNotifications(raw ? JSON.parse(raw) : []);
+      }
     } catch { setNotifications([]); }
-  }, [dept]);
+  }, [dept, isAll]);
   const markAllRead = () => {
     if (!dept) return;
     const updated = notifications.map((n) => ({ ...n, read: true }));
     setNotifications(updated);
-    try { localStorage.setItem(`safelab.dept-notifications.${dept.id}`, JSON.stringify(updated)); } catch {}
+    try {
+      if (isAll) {
+        // 학과별로 분리 저장
+        for (const d of DEPARTMENT_LIST) {
+          const ofDept = updated.filter((n) => n._deptId === d.id).map(({ _deptId, _deptName, ...rest }) => rest);
+          if (ofDept.length) localStorage.setItem(`safelab.dept-notifications.${d.id}`, JSON.stringify(ofDept));
+        }
+      } else {
+        localStorage.setItem(`safelab.dept-notifications.${dept.id}`, JSON.stringify(updated));
+      }
+    } catch {}
   };
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -199,7 +251,7 @@ export default function DeptDashboardPage() {
           <button className="dd-back" onClick={() => navigate('/admin')} aria-label="뒤로">←</button>
           <div className="dd-header__title">
             <h1>{dept.icon} {dept.name} 안전교육 대시보드</h1>
-            <p>학과 담당자 전용 — 「학과당 2~3시간 집계 부담」 자동화</p>
+            <p>{isAll ? '4학과 통합 — 학과 담당자 수기 집계 자동화' : '학과 담당자 전용 — 「학과당 2~3시간 집계 부담」 자동화'}</p>
           </div>
           <div className="dd-header__right">
             <select
@@ -207,6 +259,7 @@ export default function DeptDashboardPage() {
               value={dept.id}
               onChange={(e) => navigate(`/admin/dept/${e.target.value}`)}
             >
+              <option value="all">🏫 인하공전 전체</option>
               {DEPARTMENT_LIST.map((d) => (
                 <option key={d.id} value={d.id}>{d.icon} {d.shortName || d.name}</option>
               ))}
@@ -244,10 +297,13 @@ export default function DeptDashboardPage() {
               </div>
               <div className="dd-alerts">
                 {notifications.slice(0, 5).map((n) => (
-                  <div key={n.id} className={`dd-alert ${!n.read ? 'is-unread' : ''}`}>
+                  <div key={`${n._deptId || ''}-${n.id}`} className={`dd-alert ${!n.read ? 'is-unread' : ''}`}>
                     <span className={`pill ${sevPillClass(n.severity)}`}>{n.severity || '관심'}</span>
                     <div className="dd-alert__body">
-                      <strong>{n.title}</strong>
+                      <strong>
+                        {isAll && n._deptName && <span className="dd-alert__dept">{n._deptName}</span>}
+                        {n.title}
+                      </strong>
                       <small>📍 {n.location} · {new Date(n.createdAt).toLocaleString('ko-KR')}</small>
                     </div>
                   </div>
@@ -265,7 +321,7 @@ export default function DeptDashboardPage() {
             <div className="dd-section__head">
               <span className="eyebrow">Overview</span>
               <h2>{dept.name} 진척 현황</h2>
-              <p>실시간 자동 집계. 학생이 시나리오·퀴즈 통과하면 즉시 반영.</p>
+              <p>{isAll ? '4학과(화공·기계·전기·컴퓨터) 합산. 학생이 시나리오·퀴즈 통과하면 학과 담당자 손 안 거치고 자동 반영.' : '실시간 자동 집계. 학생이 시나리오·퀴즈 통과하면 즉시 반영.'}</p>
             </div>
             <div className="dd-kpi-grid">
               <article className="dd-kpi">

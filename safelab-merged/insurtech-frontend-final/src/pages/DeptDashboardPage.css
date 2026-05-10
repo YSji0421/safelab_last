@@ -413,3 +413,15 @@
   color: rgba(20, 184, 166, 0.7);
   margin-left: 4px;
 }
+
+.dd-alert__dept {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(15, 23, 42, 0.06);
+  color: var(--ink-2, #334155);
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+}

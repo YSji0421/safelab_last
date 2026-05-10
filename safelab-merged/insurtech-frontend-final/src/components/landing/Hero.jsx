@@ -153,7 +153,7 @@ export default function Hero() {
           {/* ── 하단 Bento row: 4개 supplementary 카드 (각 카드 클릭 시 관련 페이지) ── */}
           <BentoCard
             delay={0.1}
-            onClick={() => navigate('/admin/dept/chem')}
+            onClick={() => navigate('/admin/dept/all')}
             className="md:col-span-3 bg-text-primary text-white"
           >
             <div className="flex items-start justify-between">
@@ -171,7 +171,7 @@ export default function Hero() {
 
           <BentoCard
             delay={0.15}
-            onClick={() => navigate('/admin/dept/chem')}
+            onClick={() => navigate('/admin/dept/all')}
             className="md:col-span-3 bg-white/80 backdrop-blur"
           >
             <div className="flex items-start justify-between">
