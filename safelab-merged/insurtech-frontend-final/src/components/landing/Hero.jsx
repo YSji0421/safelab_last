@@ -4,8 +4,6 @@ import {
   ArrowRight,
   ShieldCheck,
   HardHat,
-  ChevronLeft,
-  ChevronRight,
   CheckCircle2,
   GraduationCap,
   ScrollText,
@@ -51,33 +49,6 @@ export default function Hero() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-5 md:px-8 pt-12 md:pt-16 pb-20 md:pb-28">
-        {/* 페이지네이터 + eyebrow */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-sm text-text-muted">
-            <span className="font-display font-bold text-text-primary text-base">
-              {HERO.indicator.current}
-            </span>
-            <span>/</span>
-            <span>{HERO.indicator.total}</span>
-            <div className="ml-3 flex items-center gap-1">
-              <button
-                type="button"
-                aria-label="이전 슬라이드"
-                className="h-8 w-8 inline-flex items-center justify-center rounded-full border border-black/10 bg-white/70 hover:bg-white transition"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <button
-                type="button"
-                aria-label="다음 슬라이드"
-                className="h-8 w-8 inline-flex items-center justify-center rounded-full border border-black/10 bg-white/70 hover:bg-white transition"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-
         {/* ──────── Bento Grid ──────── */}
         <div className="mt-10 md:mt-14 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 auto-rows-auto">
           {/* 헤드라인 (큰 좌측) */}
