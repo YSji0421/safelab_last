@@ -26,9 +26,9 @@ export default function SafetyLandingPage() {
             <Header />
             <main>
               <Hero />
+              <Lineup />
               <About />
               <WhySafelab />
-              <Lineup />
               <ContactForm />
             </main>
             <Footer />
