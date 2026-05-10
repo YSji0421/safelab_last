@@ -158,66 +158,6 @@ export const CONTACT = {
   submitLabel: '신청하기',
 };
 
-// 「왜 SafeLab?」 섹션 (E 패키지) — 인하공전 「2026 대학안전관리계획」 PDF 피해현황 인용.
-// 발표 임팩트: "이건 진짜 우리 학교 매년 일어나는 일"
-export const WHY_SAFELAB = {
-  eyebrow: 'Why SafeLab',
-  title: '인하공전에서 매년 일어나는 일',
-  subtitle:
-    '「인하공업전문대학 2026 대학안전관리계획」(85p) 실제 피해현황 — 5년 평균 기준. 출처: 학교 공식 문서.',
-  source: '출처: 「인하공전 2026 대학안전관리계획」 (2026.2 발행)',
-  stats: [
-    {
-      key: 'lab',
-      figure: '연 1.2건',
-      headline: '연구실 사고 부상자',
-      detail: '2022~2025 평균 — 화학실험·기계실습 위주. 도구 사용 부주의·회전체 보호기 미사용이 주 원인.',
-      source: 'PDF p.32',
-      tone: 'rose',
-    },
-    {
-      key: 'industrial',
-      figure: '연 0.2건',
-      headline: '산업재해 부상자',
-      detail: '청소·시설관리·급식 등 현업업무 종사자 — 2025년 1건 발생.',
-      source: 'PDF p.51',
-      tone: 'amber',
-    },
-    {
-      key: 'sex',
-      figure: '연 0.6건',
-      headline: '성희롱·성폭력 신고',
-      detail: '학생상담인권센터 접수 — 2024 성폭력 1건, 2025 성희롱 1건.',
-      source: 'PDF p.47',
-      tone: 'pink',
-    },
-    {
-      key: 'covid',
-      figure: '379명',
-      headline: '코로나19 누적 확진 (2022)',
-      detail: '대학 내 누적 — 비대면·자가격리 학사 운영으로 학습 결손 발생.',
-      source: 'PDF p.34',
-      tone: 'violet',
-    },
-    {
-      key: 'buildings',
-      figure: '13/25',
-      headline: '교육시설 안전인증 완료',
-      detail: '본관·1~7호관·11호관·생활관 등 13개 동 인증. 11호관·생활관 2026년 내진평가 예정.',
-      source: 'PDF p.30',
-      tone: 'mint',
-    },
-    {
-      key: 'insurance',
-      figure: '4종',
-      headline: '학생 단체 가입 보험(공제)',
-      detail: '대학배상책임 / 교육시설안전 / 연구실안전 / 신입생 OT — 7,068명 보호. 연 1,714만원 보험료.',
-      source: 'PDF p.68',
-      tone: 'sky',
-    },
-  ],
-};
-
 export const FOOTER = {
   brand: 'SafeLab',
   description: '연구실 안전교육과 연구실안전공제를 잇는 캠퍼스 리스크 플랫폼 (인슈어테크 팀)',
