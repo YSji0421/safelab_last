@@ -3,6 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { DEPARTMENT_LIST } from '../data/departments';
 import './DepartmentSelectPage.css';
 
+// 학과 영문 액센트 (매거진 톤)
+const DEPT_ENGLISH = {
+  chem: 'CHEMICAL · ENVIRONMENT',
+  mech: 'MECHANICAL',
+  elec: 'ELECTRICAL · INFO',
+  comp: 'COMPUTER · SYSTEMS',
+};
+
 export default function DepartmentSelectPage() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -80,38 +88,50 @@ export default function DepartmentSelectPage() {
               <h2>학과 선택</h2>
               <p>학과별 위험요소·시나리오·약관 매핑이 자동 적용됩니다</p>
             </div>
-            <div className="ds-grid">
-              {DEPARTMENT_LIST.map((d) => {
+            <div className="ds-list">
+              {DEPARTMENT_LIST.map((d, idx) => {
                 const on = selected === d.id;
+                const accentEn = DEPT_ENGLISH[d.id] || d.id.toUpperCase();
                 return (
                   <button
                     key={d.id}
                     type="button"
-                    className={`ds-card ${on ? 'is-selected' : ''}`}
+                    className={`ds-row ${on ? 'is-selected' : ''}`}
                     onClick={() => setSelected(d.id)}
                     aria-pressed={on}
                   >
-                    <div className="ds-card__top">
-                      <span
-                        className="ds-card__icon"
-                        style={{ background: `${d.accent}1a`, color: d.accent }}
-                      >
+                    {/* 좌측: 큰 번호 + 컬러 영역 + 큰 아이콘 */}
+                    <div
+                      className="ds-row__visual"
+                      style={{ background: `linear-gradient(135deg, ${d.accent}24, ${d.accent}0a)` }}
+                    >
+                      <span className="ds-row__no">0{idx + 1}</span>
+                      <span className="ds-row__icon" style={{ color: d.accent }}>
                         {d.icon}
                       </span>
-                      <span
-                        className={`ds-card__radio ${on ? 'on' : ''}`}
-                        aria-hidden="true"
-                      />
                     </div>
-                    <h3 className="ds-card__name">{d.name}</h3>
-                    <p className="ds-card__desc">{d.desc}</p>
-                    <ul className="ds-card__tags">
-                      {d.riskTags.map((t) => (
-                        <li key={t} className="pill pill-rose">
-                          {t}
-                        </li>
-                      ))}
-                    </ul>
+
+                    {/* 중앙: 영문 액센트 + 시리프 학과명 + 설명 */}
+                    <div className="ds-row__body">
+                      <span className="ds-row__accent" style={{ color: d.accent }}>
+                        {accentEn}
+                      </span>
+                      <h3 className="ds-row__name">{d.name}</h3>
+                      <p className="ds-row__desc">{d.desc}</p>
+                      <ul className="ds-row__tags">
+                        {d.riskTags.map((t) => (
+                          <li key={t} className="pill pill-rose">
+                            {t}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* 우측: 선택 체크 + 화살표 */}
+                    <div className="ds-row__action">
+                      <span className={`ds-row__radio ${on ? 'on' : ''}`} aria-hidden="true" />
+                      <span className="ds-row__arrow">→</span>
+                    </div>
                   </button>
                 );
               })}
