@@ -90,16 +90,31 @@ export default function DepartmentSelectPage() {
                     className={`ds-card ${on ? 'is-selected' : ''}`}
                     onClick={() => setSelected(d.id)}
                     aria-pressed={on}
+                    style={{
+                      '--dept-accent': d.accent,
+                      background: on
+                        ? `linear-gradient(135deg, ${d.accent}20, #fff 60%)`
+                        : `linear-gradient(135deg, ${d.accent}0c, #fff 65%)`,
+                      borderColor: on ? d.accent : undefined,
+                      boxShadow: on
+                        ? `0 0 0 3px ${d.accent}25, 0 8px 24px ${d.accent}22`
+                        : undefined,
+                    }}
                   >
                     <div className="ds-card__top">
                       <span
                         className="ds-card__icon"
-                        style={{ background: `${d.accent}1a`, color: d.accent }}
+                        style={{
+                          background: `linear-gradient(135deg, ${d.accent}, ${d.accent}c0)`,
+                          color: '#fff',
+                          boxShadow: `0 4px 12px ${d.accent}40`,
+                        }}
                       >
                         {d.icon}
                       </span>
                       <span
                         className={`ds-card__radio ${on ? 'on' : ''}`}
+                        style={on ? { background: d.accent, borderColor: d.accent } : undefined}
                         aria-hidden="true"
                       />
                     </div>
@@ -107,7 +122,16 @@ export default function DepartmentSelectPage() {
                     <p className="ds-card__desc">{d.desc}</p>
                     <ul className="ds-card__tags">
                       {d.riskTags.map((t) => (
-                        <li key={t} className="pill pill-rose">
+                        <li
+                          key={t}
+                          className="pill"
+                          style={{
+                            background: `${d.accent}18`,
+                            color: d.accent,
+                            border: `1px solid ${d.accent}30`,
+                            fontWeight: 700,
+                          }}
+                        >
                           {t}
                         </li>
                       ))}

@@ -7,7 +7,7 @@ export const DEPARTMENTS = {
     name: '화공환경과',
     shortName: '화공',
     icon: '🧪',
-    accent: '#E60000',
+    accent: '#EC4899',
     riskTags: ['화상', '중독', '화학물질 누출'],
     desc: '강산·유독가스·고온 반응. 흡입·피부 노출 위험 높음.',
     scenarios: [
@@ -51,7 +51,7 @@ export const DEPARTMENTS = {
     name: '기계과',
     shortName: '기계',
     icon: '⚙️',
-    accent: '#E60000',
+    accent: '#F59E0B',
     riskTags: ['끼임', '절단', '낙하'],
     desc: '선반·밀링·그라인더 등 회전 공작기계. 끼임·절단 위험.',
     scenarios: [
@@ -95,7 +95,7 @@ export const DEPARTMENTS = {
     name: '전기정보과',
     shortName: '전기',
     icon: '⚡',
-    accent: '#E60000',
+    accent: '#3B82F6',
     riskTags: ['감전', '전기화재', '아크'],
     desc: '고전압 실습·배전반·아크. 감전과 2차 낙하 위험.',
     scenarios: [
@@ -139,7 +139,7 @@ export const DEPARTMENTS = {
     name: '컴퓨터시스템공학과',
     shortName: '컴공',
     icon: '💻',
-    accent: '#E60000',
+    accent: '#8B5CF6',
     riskTags: ['VDT', '서버화재', '근골격'],
     desc: '장시간 모니터·서버 과열·정전기. 만성·화재 위험.',
     scenarios: [
