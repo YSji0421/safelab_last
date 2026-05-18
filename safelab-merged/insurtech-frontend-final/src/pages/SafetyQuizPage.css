@@ -289,3 +289,218 @@
   border-radius: 8px;
   line-height: 1.5;
 }
+
+/* ──────── 알록달록 색상 피드백 v2 (제출 후 정답·내 답 시각화) ──────── */
+
+/* 선택 중 (제출 전) — 파란 강조 */
+.sq-choice.choice-selected {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.10), rgba(255, 255, 255, 0.9));
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+.sq-choice.choice-selected .sq-choice-letter {
+  background: #3b82f6;
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+/* 정답 (내가 못 맞춤) — 초록 */
+.sq-choice.choice-correct {
+  border-color: #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(255, 255, 255, 0.95));
+  color: #065f46;
+}
+.sq-choice.choice-correct .sq-choice-letter {
+  background: #10b981;
+  color: #fff;
+}
+
+/* 정답 + 내 답 (맞춤) — 초록 강조 + 펄스 */
+.sq-choice.choice-correct-mine {
+  border-color: #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.20), rgba(255, 255, 255, 0.95));
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18), 0 4px 14px rgba(16, 185, 129, 0.18);
+  color: #065f46;
+  font-weight: 700;
+}
+.sq-choice.choice-correct-mine .sq-choice-letter {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+}
+
+/* 내가 고른 오답 — 빨강 + 취소선 */
+.sq-choice.choice-wrong {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.10), rgba(255, 255, 255, 0.95));
+  color: #991b1b;
+}
+.sq-choice.choice-wrong .sq-choice-text {
+  text-decoration: line-through;
+  text-decoration-color: rgba(239, 68, 68, 0.5);
+}
+.sq-choice.choice-wrong .sq-choice-letter {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* 그 외 선택지 — 흐림 */
+.sq-choice.choice-dim {
+  opacity: 0.45;
+  background: #f9fafb;
+}
+
+.sq-choice:disabled {
+  cursor: default;
+}
+
+/* 정답·오답 태그 (우측) */
+.sq-choice-tag {
+  margin-left: auto;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.sq-choice-tag.tag-correct {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+.sq-choice-tag.tag-wrong {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+.sq-choice-text {
+  flex: 1;
+  line-height: 1.5;
+}
+
+/* 문제 번호 동그라미 (정답·오답 시 색 변경) */
+.sq-q-num--ok {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+.sq-q-num--no {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+}
+
+/* 문제 카드 좌측 보더 (정답·오답 시) */
+.sq-item--ok {
+  border-left: 4px solid #10b981 !important;
+  background: linear-gradient(135deg, rgba(220, 252, 231, 0.25), var(--color-card, #fff) 30%);
+}
+.sq-item--no {
+  border-left: 4px solid #ef4444 !important;
+  background: linear-gradient(135deg, rgba(254, 226, 226, 0.25), var(--color-card, #fff) 30%);
+}
+
+/* 해설 블록 — 노란 강조 */
+.sq-explain-block {
+  margin-top: 14px;
+  padding: 12px 14px 14px;
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.55), rgba(255, 255, 255, 0.5));
+  border-left: 3px solid #fbbf24;
+  border-radius: 8px;
+}
+.sq-explain-block strong {
+  display: block;
+  font-size: 11px;
+  color: #92400e;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+.sq-explain-block p {
+  font-size: 13px;
+  color: var(--color-text, #0f172a);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* 결과 카드 강화 — 그라디언트 + 점수 막대 */
+.sq-result {
+  position: relative;
+  overflow: hidden;
+}
+.sq-result.pass {
+  background: linear-gradient(135deg, rgba(167, 243, 208, 0.4), rgba(255, 255, 255, 0.95));
+  border: 2px solid #10b981 !important;
+  border-top-width: 4px !important;
+}
+.sq-result.fail {
+  background: linear-gradient(135deg, rgba(254, 215, 170, 0.4), rgba(255, 255, 255, 0.95));
+  border: 2px solid #f59e0b !important;
+  border-top-width: 4px !important;
+}
+
+.sq-result-emoji {
+  font-size: 64px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.sq-result-score {
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.sq-result.pass .sq-result-score {
+  background: linear-gradient(135deg, #10b981, #059669);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.sq-result.fail .sq-result-score {
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.sq-result-score small {
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(100, 116, 139, 0.7);
+  -webkit-text-fill-color: rgba(100, 116, 139, 0.7);
+  margin-left: 6px;
+}
+
+/* 점수 진행 막대 */
+.sq-result-bar {
+  margin: 14px auto 0;
+  width: 80%;
+  max-width: 320px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.sq-result-bar__fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.sq-result-bar__fill.pass {
+  background: linear-gradient(90deg, #10b981, #059669);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+.sq-result-bar__fill.fail {
+  background: linear-gradient(90deg, #f59e0b, #ea580c);
+}
+
+/* 호버 효과 강화 (제출 전) */
+.sq-choice:not(:disabled):hover {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.04);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}

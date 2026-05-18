@@ -128,78 +128,98 @@ export default function SafetyQuizPage() {
           </div>
         ) : (
           <>
+            {/* 제출 전: 상태 표시 / 제출 후: 결과 카드 */}
             {!submitted ? (
-              <>
-                <div className="sq-status">
-                  답한 문항 <strong>{Object.keys(answers).length}</strong> / {questions.length}
+              <div className="sq-status">
+                답한 문항 <strong>{Object.keys(answers).length}</strong> / {questions.length}
+              </div>
+            ) : (
+              <div className={`sq-result ${passed ? 'pass' : 'fail'}`}>
+                <div className="sq-result-emoji">{passed ? '🎉' : '💪'}</div>
+                <div className="sq-result-score">{score} <small>/ {questions.length}</small></div>
+                <div className="sq-result-msg">
+                  {passed ? '이수 조건을 충족했습니다!' : `${PASS_SCORE}개 이상 정답이 필요합니다. 다시 풀어보세요.`}
                 </div>
-                <div className="sq-list">
-                  {questions.map((q, qi) => (
-                    <div key={qi} className="sq-item">
-                      <div className="sq-q">
-                        <span className="sq-q-num">{qi + 1}</span>
-                        <p>{q.q}</p>
-                      </div>
-                      <div className="sq-choices">
-                        {q.choices.map((c, ci) => (
+                <div className="sq-result-bar">
+                  <div
+                    className={`sq-result-bar__fill ${passed ? 'pass' : 'fail'}`}
+                    style={{ width: `${(score / questions.length) * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* 문항 리스트 — 제출 전/후 동일 구조, 색상만 변경 */}
+            <div className="sq-list">
+              {questions.map((q, qi) => {
+                const my = answers[qi];
+                const ok = my === q.answer;
+                return (
+                  <div key={qi} className={`sq-item ${submitted ? (ok ? 'sq-item--ok' : 'sq-item--no') : ''}`}>
+                    <div className="sq-q">
+                      <span className={`sq-q-num ${submitted ? (ok ? 'sq-q-num--ok' : 'sq-q-num--no') : ''}`}>
+                        {submitted ? (ok ? '✓' : '✗') : qi + 1}
+                      </span>
+                      <p>{q.q}</p>
+                    </div>
+                    <div className="sq-choices">
+                      {q.choices.map((c, ci) => {
+                        let state = '';
+                        if (submitted) {
+                          if (ci === q.answer) state = ci === my ? 'choice-correct-mine' : 'choice-correct';
+                          else if (ci === my) state = 'choice-wrong';
+                          else state = 'choice-dim';
+                        } else if (answers[qi] === ci) {
+                          state = 'choice-selected';
+                        }
+                        return (
                           <button
                             key={ci}
-                            className={`sq-choice ${answers[qi] === ci ? 'on' : ''}`}
+                            className={`sq-choice ${state}`}
                             onClick={() => handlePick(qi, ci)}
+                            disabled={submitted}
                           >
                             <span className="sq-choice-letter">{String.fromCharCode(65 + ci)}</span>
-                            <span>{c}</span>
+                            <span className="sq-choice-text">{c}</span>
+                            {submitted && state === 'choice-correct-mine' && (
+                              <span className="sq-choice-tag tag-correct">내 답 ✓ 정답</span>
+                            )}
+                            {submitted && state === 'choice-correct' && (
+                              <span className="sq-choice-tag tag-correct">정답</span>
+                            )}
+                            {submitted && state === 'choice-wrong' && (
+                              <span className="sq-choice-tag tag-wrong">내 답 ✗</span>
+                            )}
                           </button>
-                        ))}
-                      </div>
+                        );
+                      })}
                     </div>
-                  ))}
-                </div>
-                <div className="sq-cta">
-                  <button
-                    className="t-btn t-btn-primary t-btn-block"
-                    disabled={!allAnswered}
-                    onClick={handleSubmit}
-                  >
-                    {allAnswered ? '제출하기' : '모든 문항에 답해주세요'}
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className={`sq-result ${passed ? 'pass' : 'fail'}`}>
-                  <div className="sq-result-emoji">{passed ? '🎉' : '💪'}</div>
-                  <div className="sq-result-score">{score} / {questions.length}</div>
-                  <div className="sq-result-msg">
-                    {passed ? '이수 조건을 충족했습니다!' : `${PASS_SCORE}개 이상 정답이 필요합니다. 다시 풀어보세요.`}
-                  </div>
-                </div>
-                <div className="sq-review">
-                  {questions.map((q, qi) => {
-                    const my = answers[qi];
-                    const ok = my === q.answer;
-                    return (
-                      <div key={qi} className={`sq-review-item ${ok ? 'ok' : 'no'}`}>
-                        <div className="sq-review-q">
-                          <span className={`sq-review-mark ${ok ? 'ok' : 'no'}`}>{ok ? '✓' : '✗'}</span>
-                          <p>{qi + 1}. {q.q}</p>
-                        </div>
-                        <div className="sq-review-ans">
-                          <small>내 답: <strong>{q.choices[my]}</strong></small>
-                          {!ok && <small>정답: <strong>{q.choices[q.answer]}</strong></small>}
-                        </div>
-                        <div className="sq-review-explain">📖 {q.explain}</div>
+                    {submitted && (
+                      <div className="sq-explain-block">
+                        <strong>📖 해설</strong>
+                        <p>{q.explain}</p>
                       </div>
-                    );
-                  })}
-                </div>
-                <div className="sq-cta">
-                  <button className="t-btn t-btn-primary t-btn-block" onClick={handleNext}>
-                    {passed ? '다음으로 →' : '다시 풀기 ↺'}
-                  </button>
-                </div>
-              </>
-            )}
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="sq-cta">
+              {!submitted ? (
+                <button
+                  className="t-btn t-btn-primary t-btn-block"
+                  disabled={!allAnswered}
+                  onClick={handleSubmit}
+                >
+                  {allAnswered ? '제출하기' : '모든 문항에 답해주세요'}
+                </button>
+              ) : (
+                <button className="t-btn t-btn-primary t-btn-block" onClick={handleNext}>
+                  {passed ? '다음으로 →' : '다시 풀기 ↺'}
+                </button>
+              )}
+            </div>
           </>
         )}
       </div>
