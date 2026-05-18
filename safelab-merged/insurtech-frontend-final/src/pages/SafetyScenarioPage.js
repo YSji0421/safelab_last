@@ -124,10 +124,12 @@ export default function SafetyScenarioPage() {
                 const isPicked = picked === i;
                 const isCorrect = c.correct;
                 let cls = 'ss-choice';
+                let tag = null;
                 if (picked !== null) {
-                  if (isPicked && isCorrect) cls += ' correct';
-                  else if (isPicked && !isCorrect) cls += ' wrong';
-                  else if (!isPicked && isCorrect) cls += ' answer';
+                  if (isPicked && isCorrect) { cls += ' correct'; tag = '내 답 ✓ 정답'; }
+                  else if (isPicked && !isCorrect) { cls += ' wrong'; tag = '내 답 ✗'; }
+                  else if (!isPicked && isCorrect) { cls += ' answer'; tag = '정답'; }
+                  else { cls += ' dim'; }
                 }
                 return (
                   <button
@@ -138,8 +140,9 @@ export default function SafetyScenarioPage() {
                   >
                     <span className="ss-choice-letter">{String.fromCharCode(65 + i)}</span>
                     <span className="ss-choice-text">{c.text}</span>
-                    {picked !== null && isCorrect && <span className="ss-choice-mark">✓</span>}
-                    {picked !== null && isPicked && !isCorrect && <span className="ss-choice-mark">✗</span>}
+                    {tag && (
+                      <span className={`ss-choice-tag ${isCorrect ? 'tag-ok' : 'tag-no'}`}>{tag}</span>
+                    )}
                   </button>
                 );
               })}

@@ -294,3 +294,151 @@
   background: #D1D5DB;
   cursor: not-allowed;
 }
+
+/* ──────── v2 알록달록 색상 피드백 (정답·내 답 강조) ──────── */
+
+/* 사고 발생 라벨 — 빨강 강조 + 약한 펄스 */
+.ss-phase-pill {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(239, 68, 68, 0.08)) !important;
+  color: #b91c1c !important;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  font-weight: 800;
+  letter-spacing: 0.08em !important;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+  animation: ss-phase-pulse 2.4s ease-in-out infinite;
+}
+@keyframes ss-phase-pulse {
+  0%, 100% { box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15); }
+  50%      { box-shadow: 0 2px 12px rgba(239, 68, 68, 0.35); }
+}
+
+/* 진행 점 — 그라디언트 + 펄스 */
+.ss-progress-dot {
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.ss-progress-dot.done {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+.ss-progress-dot.active {
+  background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+  transform: scale(1.3);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 4px 12px rgba(59, 130, 246, 0.35);
+}
+
+/* 정답 선택 (내가 맞춤) — 강한 초록 + 그라디언트 + 펄스 */
+.ss-choice.correct {
+  border-color: #10b981 !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(255, 255, 255, 0.95)) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 6px 20px rgba(16, 185, 129, 0.2);
+  font-weight: 700;
+}
+.ss-choice.correct .ss-choice-letter {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+}
+
+/* 내가 고른 오답 — 강한 빨강 + 취소선 */
+.ss-choice.wrong {
+  border-color: #ef4444 !important;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.14), rgba(255, 255, 255, 0.95)) !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.15);
+}
+.ss-choice.wrong .ss-choice-text {
+  text-decoration: line-through;
+  text-decoration-color: rgba(239, 68, 68, 0.5);
+}
+.ss-choice.wrong .ss-choice-letter {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: #fff !important;
+}
+
+/* 놓친 정답 (사용자가 못 맞춰서 보여주는 정답) — 초록 옅음 */
+.ss-choice.answer {
+  border-color: #10b981 !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.10), rgba(255, 255, 255, 0.95)) !important;
+  opacity: 1 !important;
+}
+.ss-choice.answer .ss-choice-letter {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: #fff !important;
+}
+
+/* 미선택 + 오답인 선택지 — 흐림 */
+.ss-choice.dim {
+  opacity: 0.42;
+  background: #f9fafb !important;
+}
+
+/* 우측 태그 (정답/내 답) */
+.ss-choice-tag {
+  margin-left: auto;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ss-choice-tag.tag-ok {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+.ss-choice-tag.tag-no {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+/* 호버 강화 (제출 전) */
+.ss-choice:not(:disabled):hover {
+  border-color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.04) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* 피드백 박스 — 강화된 그라디언트 + 큰 보더 */
+.ss-feedback {
+  border-width: 2px !important;
+  border-style: solid !important;
+  border-left-width: 5px !important;
+  padding: 16px 18px !important;
+}
+.ss-feedback.ok {
+  background: linear-gradient(135deg, rgba(167, 243, 208, 0.4), rgba(255, 255, 255, 0.95)) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.12);
+}
+.ss-feedback.no {
+  background: linear-gradient(135deg, rgba(254, 215, 170, 0.4), rgba(255, 255, 255, 0.95)) !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12);
+}
+.ss-feedback strong {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  margin-bottom: 6px !important;
+  letter-spacing: -0.005em;
+}
+.ss-feedback.ok strong { color: #047857 !important; }
+.ss-feedback.no strong { color: #92400e !important; }
+.ss-feedback p {
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+}
+
+/* 질문 — 좌측 파란 보더 + 옅은 배경 */
+.ss-question {
+  position: relative;
+  padding-left: 14px !important;
+  border-left: 4px solid #3b82f6;
+}
+
+/* 시나리오 인용 따옴표 컬러 — 학과 메인 컬러로 (기본 파랑) */
+.ss-narration-quote {
+  color: rgba(59, 130, 246, 0.3) !important;
+}
