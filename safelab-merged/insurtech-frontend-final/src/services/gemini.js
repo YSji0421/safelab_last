@@ -153,7 +153,7 @@ ${hintsText}
   }
 };
 
-export const analyzeConsultation = async (transcript, accidentType = "교통사고") => {
+export const analyzeConsultation = async (transcript) => {
   const matched = matchScenario(transcript);
   if (matched) {
     return {
@@ -169,19 +169,30 @@ export const analyzeConsultation = async (transcript, accidentType = "교통사�
     return { ...getMockAnalysis(transcript), source: 'fallback' };
   }
 
-  const prompt = `당신은 보험 손해사정 전문 AI입니다.
-다음 상담 내용을 분석하여 JSON만 반환하세요 (설명 없이):
-상담내용: "${transcript}"
-사고유형: ${accidentType}
+  const prompt = `당신은 「연구실안전공제」(한국교육시설안전원) 약관 기반 손해사정 AI 입니다.
+대학 연구실·실험실 사고를 겪은 학생의 상담 발화를 분석합니다.
 
+[약관 컨텍스트]
+${LAB_SAFETY_CONTEXT}
+
+[학생 상담 발화 (STT 자막)]
+"${transcript}"
+
+분석 규칙:
+- 발화에 명시된 사실만으로 판단하세요. 발화에 없는 사고유형(예: 교통사고)을 임의로 가정하지 마세요.
+- 발화가 모호하거나 사고유형 단서가 없으면 "accidentType"을 "분류 불가 — 추가 정보 필요"로 두세요.
+- clauseRefs 는 위 약관 컨텍스트에 실제로 등장하는 조항 번호만 인용하세요.
+
+JSON만 출력 (마크다운 금지):
 {
-  "summary": "3줄 요약",
-  "keywords": ["키워드1","키워드2","키워드3","키워드4","키워드5"],
-  "clauseRefs": ["제12조","제15조"],
+  "accidentType": "발화에서 추정한 사고유형 한 줄 (예: 화학물질 화상, 감전, 기계 협착, 유독가스 흡입, 추락, 폭발, 베임 등)",
+  "summary": "발화 기반 3줄 요약",
+  "keywords": ["발화에서 추출한 핵심 키워드 5개"],
+  "clauseRefs": ["관련 약관 조항 (예: 제3조, 제11조)"],
   "customerTone": "불안|차분|불만|적극적 중 하나",
   "riskLevel": "낮음|보통|높음 중 하나",
   "actionItems": ["후속조치1","후속조치2","후속조치3"],
-  "settlementHint": "예상 합의 방향 한 문장"
+  "settlementHint": "연구실안전공제 기준 예상 보장 방향 한 문장"
 }`;
 
   try {
@@ -286,15 +297,102 @@ JSON만 출력:
   }
 };
 
-const getMockAnalysis = () => ({
-  summary: "고객이 교통사고로 인한 경추·요추 염좌 진단을 받았으며, 보험사의 조기 합의 요청에 대한 검토를 의뢰함. 치료 기간 및 합의금 산정이 주요 쟁점이며 후유장해 가능성도 있음.",
-  keywords: ["후유장해", "치료비", "합의금", "과실비율", "대인배상"],
-  clauseRefs: ["제12조 (계약 해지)", "제15조 (보험금 청구)", "제18조 (손해배상)"],
-  customerTone: "불안",
-  riskLevel: "보통",
-  actionItems: ["치료 종결 전 합의 거절 권고", "후유장해 진단서 발급 필요", "과실비율 재산정 요청"],
-  settlementHint: "치료 종결 후 후유장해 여부 확인 뒤 합의 진행 권장"
-});
+const MOCK_ANALYSIS_PRESETS = [
+  {
+    test: /화상|황산|염산|불산|약품|시약|화학물질|부식/,
+    data: {
+      accidentType: '화학물질 화상',
+      summary: '학생이 실험 중 화학물질 노출로 화상을 입은 사안. 즉시 세척 여부와 의료 진단서가 핵심이며 약관 제3조 보상 대상에 해당.',
+      keywords: ['화학물질', '화상', '세척', '진단서', '제3조'],
+      clauseRefs: ['제3조 (보상하는 손해)', '제11조 (통지 의무)', '제12조 (청구서류)'],
+      riskLevel: '보통',
+      actionItems: ['진단서·진료비계산서 확보', '연구주체의 장 사고경위서 작성', '한국교육시설안전원 즉시 통지'],
+      settlementHint: '약관 제3조 보상 대상 — 치료 종결 후 후유장해 여부 확인 뒤 청구 진행 권장',
+    },
+  },
+  {
+    test: /감전|전기|배전|차단기|누전|활선/,
+    data: {
+      accidentType: '감전 사고',
+      summary: '학생이 활선 차단 미확인 상태에서 감전된 사안. 심정지·신경계 후유장해 위험이 있어 응급 진료 및 즉시 통지가 필수.',
+      keywords: ['감전', '활선', '심정지', '후유장해', '제11조'],
+      clauseRefs: ['제3조 (보상하는 손해)', '제6조 (장해급여)', '제11조 (통지 의무)'],
+      riskLevel: '높음',
+      actionItems: ['응급실 진료기록 확보', '신경계 정밀검사 권고', '안전관리실·교육시설안전원 즉시 통지'],
+      settlementHint: '신경계 후유장해 진단 시 별표1 등급 기준 보장 청구 가능',
+    },
+  },
+  {
+    test: /기계|선반|그라인더|회전|협착|절단|끼임|밀링/,
+    data: {
+      accidentType: '기계 협착·절단 사고',
+      summary: '회전 기계 작업 중 협착·절단 사고가 발생한 사안. 비상정지 절차 준수 여부와 골절·신체 절단 여부가 보장의 핵심.',
+      keywords: ['기계', '협착', '골절', '비상정지', '장해등급'],
+      clauseRefs: ['제3조 (보상하는 손해)', '제6조 (장해급여)', '제12조 (청구서류)'],
+      riskLevel: '높음',
+      actionItems: ['응급실 X-ray·MRI 시행', '치료 종결 후 장해진단서 발급', '사고경위서 작성'],
+      settlementHint: '신체 일부 사용 불능 시 별표1 후유장해 등급 판정 후 보장 청구',
+    },
+  },
+  {
+    test: /가스|흡입|연기|독성|질식|드래프트/,
+    data: {
+      accidentType: '유독가스 흡입',
+      summary: '드래프트 챔버 오작동 또는 누출로 유독가스를 흡입한 사안. 폐 손상·재노출 방지 및 응급 산소 치료가 우선.',
+      keywords: ['유독가스', '흡입', '폐손상', '산소치료', '제3조'],
+      clauseRefs: ['제3조 (보상하는 손해)', '제9조 (입원급여)', '제11조 (통지 의무)'],
+      riskLevel: '보통',
+      actionItems: ['응급실 산소 치료 및 진단서 확보', '재진입 금지', '학과 안전관리자·안전원 통지'],
+      settlementHint: '입원 4일째부터 최대 30일 입원급여 지급(제9조) — 진단서 기준 산정',
+    },
+  },
+  {
+    test: /추락|넘어|미끄러|낙상/,
+    data: {
+      accidentType: '추락·낙상',
+      summary: '실험실 내 추락·낙상 사고. 골절 및 두부 손상 여부에 따라 보장 범위가 달라지므로 영상 검사 필수.',
+      keywords: ['추락', '낙상', '골절', '두부손상', '진단서'],
+      clauseRefs: ['제3조 (보상하는 손해)', '제6조 (장해급여)', '제12조 (청구서류)'],
+      riskLevel: '보통',
+      actionItems: ['두부·척추 영상 검사', '사고경위서 작성', '안전관리실 통지'],
+      settlementHint: '진단 결과에 따라 치료비·입원급여·후유장해 보장 가능',
+    },
+  },
+  {
+    test: /베임|찔림|날카|커터|칼/,
+    data: {
+      accidentType: '베임·자상',
+      summary: '날카로운 도구·유리 파편 등에 의한 베임·자상 사안. 감염·신경 손상 여부에 따라 추가 처치가 필요.',
+      keywords: ['베임', '자상', '봉합', '감염', '진단서'],
+      clauseRefs: ['제3조 (보상하는 손해)', '제11조 (통지 의무)', '제12조 (청구서류)'],
+      riskLevel: '낮음',
+      actionItems: ['응급실 봉합 및 파상풍 예방', '진단서 확보', '사고경위서 제출'],
+      settlementHint: '치료비 실손 보장 대상 — 진료비계산서 기준 청구',
+    },
+  },
+];
+
+const getMockAnalysis = (transcript = '') => {
+  const t = String(transcript || '');
+  const preset = MOCK_ANALYSIS_PRESETS.find((p) => p.test.test(t));
+  const base = preset?.data || {
+    accidentType: '분류 불가 — 추가 정보 필요',
+    summary: '학생 발화에서 사고유형을 특정할 단서가 부족합니다. 사고 장소·도구·증상에 대한 추가 진술이 필요합니다.',
+    keywords: ['연구실 사고', '추가 진술 필요'],
+    clauseRefs: ['제11조 (통지 의무)', '제12조 (청구서류)'],
+    riskLevel: '보통',
+    actionItems: ['사고 장소·시간·도구 추가 진술 확보', '의료 진단서 발급', '안전관리실 통지'],
+    settlementHint: '사고유형 확정 후 약관 제3조 보상 대상 여부 판단 권장',
+  };
+  const tone = /무섭|불안|걱정|어떡|괜찮을까/.test(t)
+    ? '불안'
+    : /짜증|불만|항의|이상해|왜/.test(t)
+    ? '불만'
+    : /빨리|당장|지금/.test(t)
+    ? '적극적'
+    : '차분';
+  return { ...base, customerTone: tone };
+};
 
 // ─────────────────────────────────────────────────────────
 // Mock 시나리오 (Gemini 키 없을 때 fallback)
